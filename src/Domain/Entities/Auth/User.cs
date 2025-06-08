@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities;
+﻿namespace Domain.Entities.Auth;
 
 /// <summary>
 /// Represents a user entity.

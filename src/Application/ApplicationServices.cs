@@ -1,9 +1,9 @@
 ﻿using Application.Behaviors;
-using Domain.Entities;
 using MediatR;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Domain.Entities.Auth;
 
 namespace Application;
 

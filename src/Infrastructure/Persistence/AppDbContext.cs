@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Auth;
 using Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
