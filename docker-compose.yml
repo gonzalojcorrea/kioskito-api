@@ -1,0 +1,23 @@
+services:
+  kioskitoApi:
+    image: ${DOCKER_REGISTRY-}kioskito-api
+    build:
+      context: .
+      dockerfile: src/API/Dockerfile
+    depends_on:
+      - kioskitoDb
+
+  kioskitoDb:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: kioskitoDb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: gonzalito
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+    driver: local
