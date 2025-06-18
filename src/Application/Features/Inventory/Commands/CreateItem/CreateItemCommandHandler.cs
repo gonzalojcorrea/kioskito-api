@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.Features.Inventory.Commands.CreateItem;
 
-public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, CreateItemResponse>
+public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, string>
 {
     private readonly IUnitOfWork _uof;
 
@@ -15,7 +15,7 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, Creat
         _uof = uof;
     }
 
-    public async Task<CreateItemResponse> Handle(CreateItemCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(CreateItemCommand request, CancellationToken cancellationToken)
     {
         if (await _uof.InventoryItems.GetByProductCodeAsync(request.ProductCode) is not null)
             throw new BadRequestException($"Un item con el código:'{request.ProductCode}' ya está registrado.");
@@ -44,15 +44,6 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, Creat
         await _uof.InventoryItems.AddAsync(item, cancellationToken);
         await _uof.CommitAsync(cancellationToken);
 
-        return new CreateItemResponse
-        {
-            Id = item.Id,
-            ProductCode = item.ProductCode,
-            Name = item.Name,
-            Description = item.Description,
-            Quantity = item.Quantity,
-            MinQuantity = item.MinQuantity,
-            CreatedAt = item.CreatedAt
-        };
+        return "Item creado correctamente.";
     }
 }
