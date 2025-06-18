@@ -57,7 +57,6 @@ public class AuthController : ControllerBase
         [FromBody] LoginUserQuery qry)
     {
         var token = await _mediator.Send(qry);
-
         return Ok(token);
     }
 }
