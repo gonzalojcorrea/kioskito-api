@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities.Inventory.Enums;
 
-public enum MovementReason
+public enum EMovementReason
 {
     Sale = 1,
     Consignment,

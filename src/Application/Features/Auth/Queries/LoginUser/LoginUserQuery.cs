@@ -7,5 +7,7 @@ namespace Application.Features.Auth.Queries.LoginUser;
 /// </summary>
 /// <param name="Email"></param>
 /// <param name="Password"></param>
-public record LoginUserQuery(string Email, string Password)
-    : IRequest<string>;
+public record LoginUserQuery(
+    string Email,
+    string Password
+) : IRequest<string>;

@@ -8,5 +8,8 @@ namespace Application.Features.Auth.Commands.RegisterUser;
 /// <param name="Email"></param>
 /// <param name="Password"></param>
 /// <param name="Role"></param>
-public record RegisterUserCommand(string Email, string Password, string Role) 
-    : IRequest<string>;
+public record RegisterUserCommand(
+    string Email,
+    string Password,
+    string Role
+) : IRequest<string>;

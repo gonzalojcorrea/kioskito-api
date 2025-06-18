@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.Auth;
+using Domain.Entities.Inventory;
 using Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ public class AppDbContext : DbContext
 
     public DbSet<Role> Roles { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<InventoryItem> InventoryItems { get; set; }
+    public DbSet<StockMovement> StockMovements { get; set; }
 
     /// <summary>
     /// Configures the model for the context.

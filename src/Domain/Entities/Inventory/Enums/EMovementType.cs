@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities.Inventory.Enums;
 
-public enum MovementType
+public enum EMovementType
 {
     In = 1,
     Out

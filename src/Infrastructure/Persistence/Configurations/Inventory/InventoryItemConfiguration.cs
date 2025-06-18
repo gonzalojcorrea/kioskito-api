@@ -27,7 +27,7 @@ public class InventoryItemConfiguration : IEntityTypeConfiguration<InventoryItem
         builder.Property(x => x.Quantity)
                .IsRequired();
         builder.Property(x => x.MinQuantity)
-               .IsRequired();
+               .IsRequired(false);
 
         // Relationship: InventoryItem (1) → StockMovement (many)
         builder.HasMany(x => x.StockMovements)

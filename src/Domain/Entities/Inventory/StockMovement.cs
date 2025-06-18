@@ -13,8 +13,8 @@ namespace Domain.Entities.Inventory;
 public class StockMovement : BaseEntity
 {
     public Guid InventoryItemId { get; set; }
-    public MovementType MovementTypeEnum { get; set; }
-    public MovementReason ReasonEnum { get; set; }
+    public EMovementType MovementTypeEnum { get; set; }
+    public EMovementReason ReasonEnum { get; set; }
     public decimal UnitPrice { get; set; }
     public int Quantity { get; set; }
     public DateTime MovementDate { get; set; }
