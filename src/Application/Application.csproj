@@ -24,6 +24,8 @@
     <Folder Include="Features\Inventory\Commands\" />
     <Folder Include="Features\Inventory\Queries\GetAllItems\" />
     <Folder Include="Features\Inventory\Queries\GetItemDetail\" />
+    <Folder Include="Features\Consignment\" />
+    <Folder Include="Features\Sales\" />
   </ItemGroup>
 
 </Project>

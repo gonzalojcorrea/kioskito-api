@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Inventory;
-
-namespace Domain.Entities.Sales;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents a line item in a sales order, including details about the article, quantity, and pricing.

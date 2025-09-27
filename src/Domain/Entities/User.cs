@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Consignments;
-
-namespace Domain.Entities.Auth;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents a user in the system, including personal details, authentication information, and role assignment.
@@ -17,6 +15,6 @@ public class User : BaseEntity
 
     // Navigation properties
     public virtual Role? Role { get; set; }
-    public virtual ICollection<ConsignmetTransaction> Transactions { get; set; } = new List<ConsignmetTransaction>();
     public virtual ICollection<ConsignmetTransaction> ConsignmetTransactions { get; set; } = new List<ConsignmetTransaction>();
+    public virtual ICollection<Transaction> InventoryTransactions { get; set; } = new List<Transaction>();
 }

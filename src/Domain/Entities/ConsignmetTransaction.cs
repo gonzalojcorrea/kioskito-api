@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Auth;
-
-namespace Domain.Entities.Consignments;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents a transaction associated with a consignment, including details about the user, movement type, and

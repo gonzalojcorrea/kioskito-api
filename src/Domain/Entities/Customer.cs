@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Consignments;
-
-namespace Domain.Entities.Sales;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents a customer with contact information and associated sales orders.

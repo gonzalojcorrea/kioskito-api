@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Consignments;
-
-namespace Domain.Entities.Sales;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents a sales order placed by a customer, including details such as the customer, order date, associated

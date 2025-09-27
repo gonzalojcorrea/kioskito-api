@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities.Inventory;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents the inventory record for a specific article, including stock levels, costs, and status.

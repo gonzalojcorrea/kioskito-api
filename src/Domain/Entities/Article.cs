@@ -1,7 +1,4 @@
-﻿using Domain.Entities.Consignments;
-using Domain.Entities.Sales;
-
-namespace Domain.Entities.Inventory;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents an article with details such as name, description, SKU, and pricing information.

@@ -1,7 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Features.Auth.Commands.RegisterUser;
 using Application.Interfaces;
-using Domain.Entities.Auth;
+using Domain.Entities;
 using Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;

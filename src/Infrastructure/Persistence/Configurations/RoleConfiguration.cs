@@ -1,8 +1,8 @@
-﻿using Domain.Entities.Auth;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations.Auth;
+namespace Infrastructure.Persistence.Configurations;
 
 /// <summary>
 /// Configuration for the Role entity.

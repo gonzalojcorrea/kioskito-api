@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities.Auth;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents a role within the system, defining a set of permissions or responsibilities that can be assigned to one

@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Inventory;
-
-namespace Domain.Entities.Consignments;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents a line item within a consignment, detailing the associated article, quantities, and pricing information.
@@ -20,7 +18,7 @@ public class ConsignmentLine : BaseEntity
     public decimal LineTotal { get; set; }
 
     // Navigation properties
-    public virtual Consignment Consignment { get; set; }
-    public virtual Article Article { get; set; }
+    public virtual Consignment? Consignment { get; set; }
+    public virtual Article? Article { get; set; }
     public virtual ICollection<ConsignmetTransaction> Transactions { get; set; } = new List<ConsignmetTransaction>();
 }

@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Sales;
-
-namespace Domain.Entities.Consignments;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents a consignment associated with a customer, including details such as start and end dates, status, total

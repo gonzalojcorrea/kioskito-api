@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Auth;
-
-namespace Domain.Entities.Inventory;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// Represents a transaction involving inventory, such as an entry or exit of stock.
