@@ -13,11 +13,18 @@ public class UnitOfWork : IUnitOfWork
     public IUserRepository Users { get; }
     public IRoleRepository Roles { get; }
     public IArticleRepository Articles { get; }
+    public ICustomerRepository Customers { get; }
+    public IInventoryRepository Inventories { get; }
+    public IConsignmentRepository Consignments { get; }
+    public IConsignmentLineRepository ConsignmentLines { get; }
+    public IConsignmetTransactionRepository ConsignmentTransactions { get; }
+    public ISalesOrderRepository SalesOrders { get; }
+    public ISalesOrderLineRepository SalesOrderLines { get; }
+    public ITransactionRepository Transactions { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class with the specified context.
     /// </summary>
-    /// <param name="context"></param>
     public UnitOfWork(AppDbContext context)
     {
         _context = context;
@@ -25,6 +32,14 @@ public class UnitOfWork : IUnitOfWork
         Users = new UserRepository(_context);
         Roles = new RoleRepository(_context);
         Articles = new ArticleRepository(_context);
+        Customers = new CustomerRepository(_context);
+        Inventories = new InventoryRepository(_context);
+        Consignments = new ConsignmentRepository(_context);
+        ConsignmentLines = new ConsignmentLineRepository(_context);
+        ConsignmentTransactions = new ConsignmetTransactionRepository(_context);
+        SalesOrders = new SalesOrderRepository(_context);
+        SalesOrderLines = new SalesOrderLineRepository(_context);
+        Transactions = new TransactionRepository(_context);
     }
 
     /// <summary>

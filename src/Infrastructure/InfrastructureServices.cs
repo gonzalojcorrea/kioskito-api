@@ -25,6 +25,14 @@ public static class InfrastructureServices
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IArticleRepository, ArticleRepository>();
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IInventoryRepository, InventoryRepository>();
+        services.AddScoped<IConsignmentRepository, ConsignmentRepository>();
+        services.AddScoped<IConsignmentLineRepository, ConsignmentLineRepository>();
+        services.AddScoped<IConsignmetTransactionRepository, ConsignmetTransactionRepository>();
+        services.AddScoped<ISalesOrderRepository, SalesOrderRepository>();
+        services.AddScoped<ISalesOrderLineRepository, SalesOrderLineRepository>();
+        services.AddScoped<ITransactionRepository, TransactionRepository>();
 
         // 2. JWT settings + generador
         services.Configure<JwtSettings>(

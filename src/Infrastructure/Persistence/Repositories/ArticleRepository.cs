@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Interfaces;
+using Infrastructure.Persistence.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories;
@@ -7,13 +8,9 @@ namespace Infrastructure.Persistence.Repositories;
 /// <summary>
 /// Repository for managing articles.
 /// </summary>
-public class ArticleRepository : IArticleRepository
+public class ArticleRepository : RepositoryBase<Article>, IArticleRepository
 {
-    private readonly AppDbContext _context;
-    public ArticleRepository(AppDbContext context) => _context = context;
-
-    public async Task AddAsync(Article article, CancellationToken cancellationToken = default)
-        => await _context.Articles.AddAsync(article, cancellationToken);
+    public ArticleRepository(AppDbContext context) : base(context) { }
 
     public Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken = default)
         => _context.Articles.AnyAsync(a => a.Name.ToUpper() == name.ToUpper(), cancellationToken);

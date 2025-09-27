@@ -10,6 +10,14 @@ public interface IUnitOfWork : IDisposable
     IUserRepository Users { get; }
     IRoleRepository Roles { get; }
     IArticleRepository Articles { get; }
+    ICustomerRepository Customers { get; }
+    IInventoryRepository Inventories { get; }
+    IConsignmentRepository Consignments { get; }
+    IConsignmentLineRepository ConsignmentLines { get; }
+    IConsignmetTransactionRepository ConsignmentTransactions { get; }
+    ISalesOrderRepository SalesOrders { get; }
+    ISalesOrderLineRepository SalesOrderLines { get; }
+    ITransactionRepository Transactions { get; }
 
     /// <summary>
     /// Saves all changes made in this context to the database.
