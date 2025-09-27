@@ -12,6 +12,7 @@ public class UnitOfWork : IUnitOfWork
 
     public IUserRepository Users { get; }
     public IRoleRepository Roles { get; }
+    public IArticleRepository Articles { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class with the specified context.
@@ -23,6 +24,7 @@ public class UnitOfWork : IUnitOfWork
 
         Users = new UserRepository(_context);
         Roles = new RoleRepository(_context);
+        Articles = new ArticleRepository(_context);
     }
 
     /// <summary>

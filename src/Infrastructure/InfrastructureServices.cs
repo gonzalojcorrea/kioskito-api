@@ -24,6 +24,7 @@ public static class InfrastructureServices
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IArticleRepository, ArticleRepository>();
 
         // 2. JWT settings + generador
         services.Configure<JwtSettings>(
