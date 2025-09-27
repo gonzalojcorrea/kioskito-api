@@ -35,7 +35,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, s
 
         // Check if the role exists by Id
         var role = await _uof.Roles.GetByIdAsync(request.RoleId, cancellationToken)
-            ?? throw new NotFoundException($"El rol con Id '{request.RoleId}' no existe.");
+            ?? throw new NotFoundException($"El rol '{request.RoleId}' no existe.");
 
         // Create a new user
         var user = new User

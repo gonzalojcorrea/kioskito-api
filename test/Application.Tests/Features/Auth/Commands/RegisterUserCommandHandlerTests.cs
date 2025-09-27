@@ -44,7 +44,7 @@ public class RegisterUserCommandHandlerTests
     public async Task Handle_WhenUsernameAlreadyExists_ThrowsBadRequestException()
     {
         // Arrange: command with duplicate username
-        var cmd = new RegisterUserCommand("user@mail.com", "pass123", "User");
+        var cmd = new RegisterUserCommand("Test", "User", "user@mail.com", "pass123", Guid.NewGuid());
         _userRepoMock
             .Setup(r => r.GetByEmailAsync(cmd.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new User());
@@ -66,12 +66,13 @@ public class RegisterUserCommandHandlerTests
     public async Task Handle_WhenRoleDoesNotExist_ThrowsNotFoundException()
     {
         // Arrange: command with unique username and non-existing role
-        var cmd = new RegisterUserCommand("user@mail.com", "pass123", "Admin");
+        var roleId = Guid.NewGuid();
+        var cmd = new RegisterUserCommand("Test", "User", "user@mail.com", "pass123", roleId);
         _userRepoMock
             .Setup(r => r.GetByEmailAsync(cmd.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null);
         _roleRepoMock
-            .Setup(r => r.GetByNameAsync(cmd.Role, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByIdAsync(cmd.RoleId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Role)null);
 
         // Act: handle the command
@@ -80,7 +81,7 @@ public class RegisterUserCommandHandlerTests
         // Assert: check that a NotFoundException is thrown
         await act.Should()
             .ThrowAsync<NotFoundException>()
-            .WithMessage("El rol 'Admin' no existe.");
+            .WithMessage($"El rol '{roleId}' no existe.");
     }
 
     /// <summary>
@@ -91,15 +92,16 @@ public class RegisterUserCommandHandlerTests
     public async Task Handle_WhenValidRequest_ReturnsJwtToken()
     {
         // Arrange: command with unique username and existing role
-        var cmd = new RegisterUserCommand("user@mail.com", "secret", "User");
-        var role = new Role { Name = "User" };
+        var roleId = Guid.NewGuid();
+        var cmd = new RegisterUserCommand("Test", "User", "user@mail.com", "secret", roleId);
+        var role = new Role { Id = roleId, Name = "User" };
 
         // Mock the user repository to return null for the username
         _userRepoMock
             .Setup(r => r.GetByEmailAsync(cmd.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null);
         _roleRepoMock
-            .Setup(r => r.GetByNameAsync(cmd.Role, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByIdAsync(cmd.RoleId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(role);
         _hasherMock
             .Setup(h => h.HashPassword(It.IsAny<User>(), cmd.Password))
