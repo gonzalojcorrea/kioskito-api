@@ -27,27 +27,30 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, s
 
     public async Task<string> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        // Validate the request
-        if (await _uof.Users.GetByEmailAsync(request.Email) is not null)
+        var normalizedEmail = request.Email.Trim();
+
+        // Validate the request (email uniqueness)
+        if (await _uof.Users.GetByEmailAsync(normalizedEmail, cancellationToken) is not null)
             throw new BadRequestException("El email ingresado ya está en uso.");
 
-        // Check if the role exists
-        var role = await _uof.Roles.GetByNameAsync(request.Role)
-            ?? throw new NotFoundException($"El rol '{request.Role}' no existe.");
+        // Check if the role exists by Id
+        var role = await _uof.Roles.GetByIdAsync(request.RoleId, cancellationToken)
+            ?? throw new NotFoundException($"El rol con Id '{request.RoleId}' no existe.");
 
         // Create a new user
         var user = new User
         {
-            Email = request.Email,
+            Name = request.Name.Trim(),
+            LastName = request.LastName.Trim(),
+            Email = normalizedEmail,
             RoleId = role.Id,
         };
 
         // Hash the password
-        var hashed = _passwordHasher.HashPassword(user, request.Password);
-        user.PasswordHash = hashed;
+        user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 
         // Add the user to the database
-        await _uof.Users.AddAsync(user);
+        await _uof.Users.AddAsync(user, cancellationToken);
         await _uof.CommitAsync(cancellationToken);
 
         // Generate a JWT token for the user

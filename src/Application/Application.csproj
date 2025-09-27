@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Inventory\Commands\" />
     <Folder Include="Features\Inventory\Queries\GetAllItems\" />
     <Folder Include="Features\Inventory\Queries\GetItemDetail\" />
   </ItemGroup>

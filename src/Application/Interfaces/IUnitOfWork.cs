@@ -9,8 +9,6 @@ public interface IUnitOfWork : IDisposable
 {
     IUserRepository Users { get; }
     IRoleRepository Roles { get; }
-    IInventoryItemRepository InventoryItems { get; }
-
 
     /// <summary>
     /// Saves all changes made in this context to the database.

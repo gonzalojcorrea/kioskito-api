@@ -1,5 +1,4 @@
 ﻿using Application.Common.Models;
-using Application.Features.Inventory.Commands.CreateItem;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -32,9 +31,11 @@ public class InventoryController : ControllerBase
     [SwaggerResponse(400, "Validation errors or bad request", typeof(ErrorResponse))]
     [SwaggerResponse(404, "Item already exists", typeof(ErrorResponse))]
     [SwaggerResponse(500, "Internal server error", typeof(ErrorResponse))]
-    public async Task<ActionResult<string>> CreateItem([FromBody] CreateItemCommand cmd)
+    public async Task<ActionResult<string>> CreateItem(/*[FromBody] CreateItemCommand cmd*/)
     {
-        var response = await _mediator.Send(cmd);
-        return Ok(response);
+        //var response = await _mediator.Send(cmd);
+        //return Ok(response);
+
+        return Ok("Not implemented yet");
     }
 }
