@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,6 +22,7 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
                .IsRequired();
 
         builder.Property(t => t.Type)
+               .HasConversion<int>()
                .IsRequired();
 
         builder.Property(t => t.Quantity)

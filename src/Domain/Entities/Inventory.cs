@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Enums;
+
+namespace Domain.Entities;
 
 /// <summary>
 /// Represents the inventory record for a specific article, including stock levels, costs, and status.
@@ -10,7 +12,7 @@ public class Inventory : BaseEntity
     public Guid ArticleId { get; set; }
     public int Quantity { get; set; }
     public int MinStock { get; set; }
-    public int Status { get; set; }
+    public InventoryStatus Status { get; set; }
     public decimal AvgCost { get; set; }
 
     // Navigation properties

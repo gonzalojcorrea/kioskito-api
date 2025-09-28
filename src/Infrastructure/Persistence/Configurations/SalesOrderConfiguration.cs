@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -28,6 +29,7 @@ public class SalesOrderConfiguration : IEntityTypeConfiguration<SalesOrder>
                .IsRequired();
 
         builder.Property(so => so.Status)
+               .HasConversion<int>()
                .IsRequired();
 
         builder.HasMany(so => so.Items)

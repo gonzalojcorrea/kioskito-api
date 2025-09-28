@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Enums;
+
+namespace Domain.Entities;
 
 /// <summary>
 /// Represents a transaction involving inventory, such as an entry or exit of stock.
@@ -10,7 +12,7 @@ public class Transaction : BaseEntity
 {
     public Guid InventoryId { get; set; }
     public Guid UserId { get; set; }
-    public int Type { get; set; }
+    public TransactionType Type { get; set; }
     public int Quantity { get; set; }
     public DateTime Date { get; set; } = DateTime.UtcNow.AddHours(-3);
     public string? Note { get; set; }

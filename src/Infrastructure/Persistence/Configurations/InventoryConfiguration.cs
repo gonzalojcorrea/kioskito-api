@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,6 +25,7 @@ public class InventoryConfiguration : IEntityTypeConfiguration<Inventory>
                .IsRequired();
 
         builder.Property(i => i.Status)
+               .HasConversion<int>()
                .IsRequired();
 
         builder.Property(i => i.AvgCost)

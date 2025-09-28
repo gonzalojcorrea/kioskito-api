@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Enums;
+
+namespace Domain.Entities;
 
 /// <summary>
 /// Represents a consignment associated with a customer, including details such as start and end dates, status, total
@@ -12,7 +14,7 @@ public class Consignment : BaseEntity
     public Guid CustomerId { get; set; }
     public DateTime StartDate { get; set; } = DateTime.UtcNow.AddHours(-3);
     public DateTime? EndDate { get; set; }
-    public int Status { get; set; } // 1: Active, 2: Closed, 3: Cancelled
+    public ConsignmentStatus Status { get; set; }
     public decimal Total { get; set; }
 
     // Navigation properties

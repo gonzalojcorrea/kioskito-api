@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,6 +18,7 @@ public class ConsignmetTransactionConfiguration : IEntityTypeConfiguration<Consi
                .IsRequired();
 
         builder.Property(ct => ct.MovementType)
+               .HasConversion<int>()
                .IsRequired();
 
         builder.Property(ct => ct.Quantity)

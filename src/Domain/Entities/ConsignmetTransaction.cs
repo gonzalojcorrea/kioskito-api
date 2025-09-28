@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Enums;
+
+namespace Domain.Entities;
 
 /// <summary>
 /// Represents a transaction associated with a consignment, including details about the user, movement type, and
@@ -11,7 +13,7 @@ public class ConsignmetTransaction : BaseEntity
 {
     public Guid ConsignmentLineId { get; set; }
     public Guid UserId { get; set; }
-    public int MovementType { get; set; }
+    public ConsignmentMovementType MovementType { get; set; }
     public int Quantity { get; set; }
     public DateTime Date { get; set; } = DateTime.UtcNow.AddHours(-3);
 
