@@ -29,6 +29,32 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
     c.EnableAnnotations();
+
+    // JWT Bearer security definition
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Introduce el token JWT con el prefijo 'Bearer '. Ej: Bearer eyJhbGciOiJI..."
+    });
+
+    // Global security requirement
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            }, new string[] {}
+        }
+    });
 });
 
 builder.Services
