@@ -1,0 +1,43 @@
+version: "3.9"
+
+name: kioskito
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: src/API/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Release
+    image: kioskito-api:latest
+    env_file:
+      - ./env/api.env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: kioskito-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: gonzalito
+      POSTGRES_DB: kioskitoDb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d kioskitoDb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

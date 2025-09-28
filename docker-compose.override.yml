@@ -1,9 +1,0 @@
-services:
-  kioskitoApi:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__Default=Host=kioskitoDb;Port=5432;Database=kioskitoDb;Username=admin;Password=gonzalito
-    ports:
-      - "8080:80"
-    volumes: []

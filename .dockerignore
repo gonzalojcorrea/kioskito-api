@@ -28,3 +28,7 @@ README.md
 !.git/config
 !.git/packed-refs
 !.git/refs/heads/**
+# Mantener fuera del contexto archivos de despliegue si no son necesarios
+!/deploy/docker-compose.yml
+!/deploy/env/api.env
+!/deploy/README-docker.md
