@@ -1,0 +1,17 @@
+@use 'material.theme';
+
+/* Fuente Roboto (puedes servirla local si quieres) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+
+/* Global base styles */
+html, body {height:100%;}
+body {margin:0;font-family: Roboto, Arial, sans-serif;background:#f5f6fa;color:#222;-webkit-font-smoothing:antialiased;}
+
+/* Scrollbar suave (opcional) */
+* { scrollbar-width: thin; scrollbar-color: var(--color-primary) #e0e4ea; }
+*::-webkit-scrollbar { width: 10px; }
+*::-webkit-scrollbar-track { background:#e0e4ea; }
+*::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius:20px; border:2px solid #e0e4ea; }
+
+/* Dark theme background example */
+body.dark-theme { background:#10161d; color:#e2e8f0; }

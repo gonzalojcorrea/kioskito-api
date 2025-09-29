@@ -1,0 +1,41 @@
+@use '@angular/material' as mat;
+
+// Nota: En Material v18 se impulsa el uso directo de paletas M3. Si no necesitas tonos específicos
+// puedes usar directamente las paletas predefinidas. Si luego quieres personalizar tonalidades
+// retomamos con define-palette cuando el soporte esté estable; por ahora evitamos el error.
+
+// Tema claro mínimo (solo claves soportadas por define-colors: theme-type, primary, tertiary)
+$theme-light: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$blue-palette,
+    tertiary: mat.$cyan-palette,
+  ),
+  // typography y density se dejan vacíos para usar defaults
+));
+
+// Tema oscuro mínimo
+$theme-dark: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$blue-palette,
+    tertiary: mat.$cyan-palette,
+  ),
+));
+
+// Core + todos los componentes dentro de un selector (requisito M3)
+:root {
+  @include mat.all-component-themes($theme-light);
+}
+
+// Modo oscuro por clase
+.dark-theme {
+  @include mat.all-component-colors($theme-dark);
+}
+
+// Exportar colores como CSS custom properties para uso en estilos propios
+// Custom properties derivadas del tema claro
+:root {
+  --color-primary: #{mat.get-theme-color($theme-light, primary)};
+  --color-tertiary: #{mat.get-theme-color($theme-light, tertiary)};
+}
