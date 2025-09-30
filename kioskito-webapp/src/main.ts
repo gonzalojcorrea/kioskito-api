@@ -6,12 +6,13 @@ import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideMaterial } from './app/shared/material.imports';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(APP_ROUTES),
     provideHttpClient(),
     provideAnimations(),
-    provideMaterial()
+    provideMaterial(), provideAnimationsAsync()
   ]
 }).catch(err => console.error(err));
