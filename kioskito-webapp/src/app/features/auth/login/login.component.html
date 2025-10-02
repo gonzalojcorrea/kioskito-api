@@ -1,18 +1,22 @@
 <div class="auth-shell">
   <div class="brand-panel">
     <div class="brand-content">
-      <div class="">
-        <mat-icon>inventory_2</mat-icon>
-      </div>
-      <h1>Inventory Control</h1>
-      <p class="subtitle">Gestión centralizada de stock, movimientos y trazabilidad en tiempo real.</p>
+
+      <!-- Logo -->
+      <img src="../../../../assets/logo/logo.png" alt="Kioskito" class="logo" />
+
+      <p class="subtitle">
+        Gestión centralizada de stock, movimientos y trazabilidad en tiempo real.
+      </p>
+
       <ul class="feature-list">
-  <li><mat-icon>check_circle</mat-icon> Control de lotes</li>
-  <li><mat-icon>check_circle</mat-icon> Alertas de reposición</li>
-  <li><mat-icon>check_circle</mat-icon> Auditoría completa</li>
+        <li><mat-icon>check_circle</mat-icon> Control de lotes</li>
+        <li><mat-icon>check_circle</mat-icon> Alertas de reposición</li>
+        <li><mat-icon>check_circle</mat-icon> Auditoría completa</li>
       </ul>
     </div>
   </div>
+
   <div class="form-panel">
     <mat-card class="login-card" appearance="outlined">
       <h2 class="title">Iniciar sesión</h2>
@@ -25,16 +29,18 @@
           <mat-error *ngIf="form.get('email')?.hasError('required')">El email es obligatorio</mat-error>
           <mat-error *ngIf="form.get('email')?.hasError('email')">Formato inválido</mat-error>
         </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Contraseña</mat-label>
-            <mat-icon matPrefix>lock</mat-icon>
-            <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password" />
-            <button mat-icon-button matSuffix type="button" (click)="togglePassword()" [attr.aria-label]="showPassword ? 'Ocultar' : 'Mostrar'">
-              <mat-icon fontIcon="{{ showPassword ? 'visibility_off' : 'visibility' }}"></mat-icon>
-            </button>
-            <mat-error *ngIf="form.get('password')?.hasError('required')">La contraseña es obligatoria</mat-error>
-            <mat-error *ngIf="form.get('password')?.hasError('minlength')">Mínimo 3 caracteres</mat-error>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password" />
+          <button mat-icon-button matSuffix type="button" (click)="togglePassword()" [attr.aria-label]="showPassword ? 'Ocultar' : 'Mostrar'">
+            <mat-icon fontIcon="{{ showPassword ? 'visibility_off' : 'visibility' }}"></mat-icon>
+          </button>
+          <mat-error *ngIf="form.get('password')?.hasError('required')">La contraseña es obligatoria</mat-error>
+          <mat-error *ngIf="form.get('password')?.hasError('minlength')">Mínimo 3 caracteres</mat-error>
         </mat-form-field>
+
         <div class="actions">
           <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="form.invalid || loading()">
             <mat-icon>login</mat-icon>
@@ -42,6 +48,7 @@
             <mat-progress-spinner *ngIf="loading()" mode="indeterminate" diameter="18"></mat-progress-spinner>
           </button>
         </div>
+
         <mat-hint class="hint" *ngIf="!error()">Usá tus credenciales corporativas.</mat-hint>
         <p class="error" *ngIf="error()">{{ error() }}</p>
       </form>

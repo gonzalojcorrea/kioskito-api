@@ -6,11 +6,10 @@ import { NavItem } from '../../../shared/layout/sidebar.component';
   selector: 'app-dashboard-layout',
   standalone: true,
   imports: [ShellComponent],
-  template: `<app-shell [title]="'Kioskito'" [items]="menu"></app-shell>`
+  template: `<app-shell [title]="''" [items]="menu"></app-shell>`
 })
 export class DashboardLayoutComponent {
   menu: NavItem[] = [
-    { label: 'Home', icon: 'home', path: 'home' },
     { label: 'Artículos', icon: 'inventory_2', path: 'articulos' },
     { label: 'Inventarios', icon: 'move_up', path: 'inventarios' }
   ];

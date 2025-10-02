@@ -1,0 +1,19 @@
+<div class="toolbar">
+  <h2>{{ title }}</h2>
+  <div class="toolbar-actions">
+    <!-- Botón Agregar opcional -->
+    <button *ngIf="showAdd"
+            mat-raised-button
+            color="primary"
+            (click)="add.emit()">
+      <mat-icon>add</mat-icon> {{ addLabel }}
+    </button>
+
+    <!-- Botones extras dinámicos -->
+    <button *ngFor="let action of actions"
+            mat-raised-button
+            (click)="actionClicked.emit(action.action)">
+      <mat-icon>{{ action.icon }}</mat-icon> {{ action.label }}
+    </button>
+  </div>
+</div>

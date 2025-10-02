@@ -24,13 +24,66 @@
 .footer-note {margin-top:.5rem;text-align:center;font-size:.65rem;letter-spacing:.5px;text-transform:uppercase;color:#90a4ae;}
 ::ng-deep .mat-mdc-form-field .mat-icon {opacity:.9;}
 @media (max-width: 1080px) {
-  .auth-shell {flex-direction:column;}
-  .brand-panel {padding:2.5rem 2rem;}
-  .form-panel {padding:2rem 1.25rem;}
-  .brand-content h1 {font-size:2rem;}
+  .auth-shell { flex-direction: column; }
+  .brand-panel { padding: 2.5rem 2rem; }
+  .form-panel { padding: 2rem 1.25rem; }
+  .brand-content h1 { font-size: 2rem; }
 }
+
 @media (max-width: 640px) {
-  .brand-panel {display:none;}
-  .form-panel {flex:1;background:linear-gradient(135deg,#f0f3f8,#e4e9f0);} 
-  .login-card {box-shadow:0 6px 20px -6px rgba(0,0,0,.2);padding:2rem 1.5rem;border-radius:18px;}
+  .brand-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at 30% 30%, #255b99, #0d1f33 70%); /* mantiene el azul */
+    padding: 1.5rem;
+    min-height: 180px;   /* altura reducida, no media pantalla */
+  }
+
+  .brand-content {
+    text-align: center;
+  }
+
+  .brand-content .subtitle,
+  .brand-content .feature-list {
+    display: none;
+  }
+
+  .logo {
+    width: 120px;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-panel {
+    flex: 1;
+    background: linear-gradient(135deg,#f5f7fa,#e4e9f0);
+    padding: 1.5rem;
+  }
+
+  .login-card {
+    box-shadow: 0 6px 20px -6px rgba(0,0,0,.2);
+    padding: 2rem 1.5rem;
+    border-radius: 18px;
+  }
+}
+
+.brand-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.logo {
+  width: 250px;   /* por defecto en desktop */
+  height: auto;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 992px) {
+  .logo { width: 220px; }
+}
+
+@media (max-width: 768px) {
+  .logo { width: 150px; }
 }

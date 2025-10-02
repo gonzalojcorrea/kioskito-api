@@ -1,23 +1,20 @@
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { TableComponent, TableColumn, TableAction } from '../../shared/table/table.component';
+import { ToolbarComponent } from '../../shared/toolbar/toolbar.component';
 import { ArticlesService } from '../../services/articles.service';
-import { Article} from '../../models/article.model';
+import { Article } from '../../models/article.model';
 
 @Component({
   selector: 'app-articles-list',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, TableComponent],
+  imports: [CommonModule, TableComponent, ToolbarComponent],
   template: `
-    <div class="toolbar">
-      <h2>Artículos</h2>
-      <button mat-raised-button (click)="agregar()">
-        <mat-icon>add</mat-icon> Agregar artículo
-      </button>
-    </div>
+    <app-toolbar
+      title="Artículos"
+      [showAdd]="true"
+      (add)="agregar()">
+    </app-toolbar>
 
     <app-table
       [columns]="columns"
@@ -26,13 +23,7 @@ import { Article} from '../../models/article.model';
       [totalItems]="data.length"
       (actionClicked)="onAction($event)">
     </app-table>
-  `,
-  styles: [`
-    .toolbar {
-      display: flex; align-items: center; justify-content: space-between;
-      margin: 16px 0;
-    }
-  `]
+  `
 })
 export class ArticlesListComponent {
   columns: TableColumn[] = [
@@ -54,10 +45,11 @@ export class ArticlesListComponent {
     this.refresh();
   }
 
-  refresh() { this.data = this.svc.getAll(); }
+  refresh() {
+    this.data = this.svc.getAll();
+  }
 
   agregar() {
-    // Mock rápido: agrega uno de ejemplo. Luego lo cambiamos por modal + formulario.
     const nuevo: Article = {
       codigo: Math.floor(Math.random() * 9000) + 1000,
       nombre: 'Nuevo artículo',
@@ -76,7 +68,6 @@ export class ArticlesListComponent {
       this.refresh();
     }
     if (e.action === 'edit') {
-      // Próximo paso: abrir modal de edición
       console.log('Editar:', e.row);
     }
   }
