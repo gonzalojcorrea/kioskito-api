@@ -1,8 +1,9 @@
 export interface Article {
-    codigo: number;
-    nombre: string;
-    categoria: string;
-    precio: number;
-    activo: boolean;
-    fechaAlta: string; 
-}
+    id: string;
+    name: string;
+    description?: string;
+    sku?: string;
+    salePrice?: number;
+    consignmentPrice?: number;
+    isActive: boolean;
+}  

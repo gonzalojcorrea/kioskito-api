@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent, TableColumn, TableAction } from '../../shared/table/table.component';
 import { ToolbarComponent } from '../../shared/toolbar/toolbar.component';
-import { ArticlesService } from '../../services/articles.service';
+import { ArticleService } from '../../services/article.service';
 import { Article } from '../../models/article.model';
 
 @Component({
@@ -27,11 +27,11 @@ import { Article } from '../../models/article.model';
 })
 export class ArticlesListComponent {
   columns: TableColumn[] = [
-    { field: 'codigo', header: 'Código' },
-    { field: 'nombre', header: 'Nombre' },
-    { field: 'categoria', header: 'Categoría' },
-    { field: 'precio', header: 'Precio' },
-    { field: 'activo', header: 'Activo' },
+    { field: 'name', header: 'Nombre', type: 'text' },
+    { field: 'sku', header: 'SKU', type: 'text' },
+    { field: 'salePrice', header: 'Precio Venta', type: 'currency' },
+    { field: 'consignmentPrice', header: 'Precio Consignación', type: 'currency' },
+    { field: 'status', header: 'Estado', type: 'status' }
   ];
 
   actions: TableAction[] = [
@@ -41,31 +41,32 @@ export class ArticlesListComponent {
 
   data: Article[] = [];
 
-  constructor(private svc: ArticlesService) {
+  constructor(private svc: ArticleService) {
     this.refresh();
   }
 
   refresh() {
-    this.data = this.svc.getAll();
+    this.svc.getAll().subscribe({
+      next: (res) => this.data = res,
+      error: (err) => console.error('Error cargando artículos', err)
+    });
   }
 
   agregar() {
     const nuevo: Article = {
-      codigo: Math.floor(Math.random() * 9000) + 1000,
-      nombre: 'Nuevo artículo',
-      categoria: 'General',
-      precio: 0,
-      activo: true,
-      fechaAlta: new Date().toISOString()
+      id: '', // lo genera el back
+      name: 'Nuevo artículo',
+      sku: 'SKU' + Math.floor(Math.random() * 1000),
+      salePrice: 0,
+      consignmentPrice: 0,
+      isActive: true
     };
-    this.svc.add(nuevo);
-    this.refresh();
+    this.svc.create(nuevo).subscribe(() => this.refresh());
   }
 
   onAction(e: { action: string, row: Article }) {
     if (e.action === 'delete') {
-      this.svc.remove(e.row.codigo);
-      this.refresh();
+      this.svc.delete(e.row.id).subscribe(() => this.refresh());
     }
     if (e.action === 'edit') {
       console.log('Editar:', e.row);

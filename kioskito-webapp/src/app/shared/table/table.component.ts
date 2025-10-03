@@ -4,11 +4,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-
-export interface TableColumn {
-  field: string;
-  header: string;
-}
+import { TableColumn } from './tableColumn';
 
 export interface TableAction {
   icon: string;
@@ -42,7 +38,6 @@ export class TableComponent implements OnChanges {
   displayedColumns: string[] = [];
 
   ngOnChanges() {
-    // generar columnas dinámicas + acciones
     this.displayedColumns = this.columns.map(c => c.field);
     if (this.actions.length > 0) {
       this.displayedColumns.push('actions');
@@ -57,3 +52,5 @@ export class TableComponent implements OnChanges {
     this.pageChanged.emit({ pageIndex: event.pageIndex, pageSize: event.pageSize });
   }
 }
+export { TableColumn };
+

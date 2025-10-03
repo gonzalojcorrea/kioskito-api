@@ -1,0 +1,28 @@
+{
+  "articles": [
+    {
+      "id": "1",
+      "name": "Coca Cola 500ml",
+      "sku": "SKU001",
+      "salePrice": 1200,
+      "consignmentPrice": 1000,
+      "status": true
+    },
+    {
+      "id": "2",
+      "name": "Papas Lays 100g",
+      "sku": "SKU002",
+      "salePrice": 800,
+      "consignmentPrice": 650,
+      "status": true
+    },
+    {
+      "id": "",
+      "name": "Nuevo artículo",
+      "sku": "SKU509",
+      "salePrice": 0,
+      "consignmentPrice": 0,
+      "status": true
+    }
+  ]
+}

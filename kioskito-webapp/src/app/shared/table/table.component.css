@@ -1,0 +1,88 @@
+.table-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-top: 16px;
+  }
+  
+  /* Header */
+  .mat-header-cell {
+    background: #1a3d66;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  /* Filas */
+  .mat-row {
+    transition: background 0.2s ease-in-out;
+  }
+  
+  .mat-row:hover {
+    background: rgba(26, 61, 102, 0.05);
+  }
+  
+  /* Celdas */
+  .mat-cell {
+    font-size: 14px;
+    padding: 12px;
+    color: #333;
+  }
+  
+  /* Acciones */
+  td.mat-cell:last-child {
+    text-align: center;
+  }
+  
+  td.mat-cell:last-child button {
+    margin: 0 4px;
+    border-radius: 50%;
+    background: #f4f6fa;
+    transition: background 0.2s ease;
+  }
+  
+  td.mat-cell:last-child button:hover {
+    background: #1a3d66;
+  }
+  
+  td.mat-cell:last-child button:hover mat-icon {
+    color: #fff;
+  }
+  
+  mat-icon {
+    font-size: 20px;
+    color: #1a3d66;
+  }
+  
+  /* Paginador */
+  .mat-paginator {
+    border-top: 1px solid #eee;
+    padding: 8px;
+  }
+  
+  .mat-paginator .mat-button-base {
+    border-radius: 50%;
+  }
+  
+
+  .status-chip {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .status-chip.active {
+    background: #e0f7e9;
+    color: #2e7d32;
+  }
+  
+  .status-chip.inactive {
+    background: #fdecea;
+    color: #c62828;
+  }
+  
