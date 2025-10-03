@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TableComponent, TableColumn, TableAction } from '../../shared/table/table.component';
+import { TableComponent, TableColumn, TableAction, ActionDefault } from '../../shared/table/table.component';
 import { ToolbarComponent } from '../../shared/toolbar/toolbar.component';
 import { ArticleService } from '../../services/article.service';
 import { Article } from '../../models/article.model';
@@ -34,9 +34,13 @@ export class ArticlesListComponent {
     { field: 'status', header: 'Estado', type: 'status' }
   ];
 
+  // 🔥 Acciones: usando el enum ActionDefault
   actions: TableAction[] = [
-    { icon: 'edit', label: 'Editar', action: 'edit' },
-    { icon: 'delete', label: 'Eliminar', action: 'delete' },
+    { action: 'view', type: ActionDefault.View },
+    { action: 'edit', type: ActionDefault.Edit },
+    { action: 'delete', type: ActionDefault.Delete },
+    // Ejemplo extra (custom)
+    { action: 'duplicate', label: 'Prueba', icon: 'content_copy' }
   ];
 
   data: Article[] = [];
@@ -65,11 +69,19 @@ export class ArticlesListComponent {
   }
 
   onAction(e: { action: string, row: Article }) {
-    if (e.action === 'delete') {
-      this.svc.delete(e.row.id).subscribe(() => this.refresh());
-    }
-    if (e.action === 'edit') {
-      console.log('Editar:', e.row);
+    switch (e.action) {
+      case 'view':
+        console.log('Ver detalle:', e.row);
+        break;
+      case 'edit':
+        console.log('Editar:', e.row);
+        break;
+      case 'delete':
+        this.svc.delete(e.row.id).subscribe(() => this.refresh());
+        break;
+      case 'duplicate':
+        console.log('Duplicar artículo:', e.row);
+        break;
     }
   }
 }
