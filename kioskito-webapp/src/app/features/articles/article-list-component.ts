@@ -4,16 +4,18 @@ import { TableComponent, TableColumn, TableAction, ActionDefault } from '../../s
 import { ToolbarComponent } from '../../shared/toolbar/toolbar.component';
 import { ArticleService } from '../../services/article.service';
 import { Article } from '../../models/article.model';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ActionModalComponent } from '../../shared/modals/action-modal-component';
 
 @Component({
   selector: 'app-articles-list',
   standalone: true,
-  imports: [CommonModule, TableComponent, ToolbarComponent],
+  imports: [CommonModule, TableComponent, ToolbarComponent, MatDialogModule],
   template: `
     <app-toolbar
       title="Artículos"
       [showAdd]="true"
-      (add)="agregar()">
+      (add)="openModal('create')">
     </app-toolbar>
 
     <app-table
@@ -31,21 +33,18 @@ export class ArticlesListComponent {
     { field: 'sku', header: 'SKU', type: 'text' },
     { field: 'salePrice', header: 'Precio Venta', type: 'currency' },
     { field: 'consignmentPrice', header: 'Precio Consignación', type: 'currency' },
-    { field: 'status', header: 'Estado', type: 'status' }
+    { field: 'isActive', header: 'Estado', type: 'status' }
   ];
 
-  // 🔥 Acciones: usando el enum ActionDefault
   actions: TableAction[] = [
     { action: 'view', type: ActionDefault.View },
     { action: 'edit', type: ActionDefault.Edit },
-    { action: 'delete', type: ActionDefault.Delete },
-    // Ejemplo extra (custom)
-    { action: 'duplicate', label: 'Prueba', icon: 'content_copy' }
+    { action: 'delete', type: ActionDefault.Delete }
   ];
 
   data: Article[] = [];
 
-  constructor(private svc: ArticleService) {
+  constructor(private svc: ArticleService, private dialog: MatDialog) {
     this.refresh();
   }
 
@@ -56,31 +55,53 @@ export class ArticlesListComponent {
     });
   }
 
-  agregar() {
-    const nuevo: Article = {
-      id: '', // lo genera el back
-      name: 'Nuevo artículo',
-      sku: 'SKU' + Math.floor(Math.random() * 1000),
-      salePrice: 0,
-      consignmentPrice: 0,
-      isActive: true
-    };
-    this.svc.create(nuevo).subscribe(() => this.refresh());
+  /** 🔹 Abre modal según acción (crear, editar, eliminar o ver) */
+  openModal(action: 'create' | 'edit' | 'delete' | 'view', article?: Article) {
+    const dialogRef = this.dialog.open(ActionModalComponent, {
+      data: {
+        entity: 'Artículo',
+        action,
+        fields: [
+          { name: 'name', label: 'Nombre', type: 'text', required: true },
+          { name: 'sku', label: 'SKU', type: 'text' },
+          { name: 'salePrice', label: 'Precio Venta', type: 'number' },
+          { name: 'consignmentPrice', label: 'Precio Consignación', type: 'number' },
+          { name: 'isActive', label: 'Activo', type: 'boolean' }
+        ],
+        value: article
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+
+      switch (result.action) {
+        case 'create':
+          this.svc.create(result.value).subscribe(() => this.refresh());
+          break;
+        case 'edit':
+          if (article)
+            this.svc.update(article.id, result.value).subscribe(() => this.refresh());
+          break;
+        case 'delete':
+          if (article)
+            this.svc.delete(article.id).subscribe(() => this.refresh());
+          break;
+      }
+    });
   }
 
+  /** 🔹 Interacción desde la tabla */
   onAction(e: { action: string, row: Article }) {
     switch (e.action) {
       case 'view':
-        console.log('Ver detalle:', e.row);
+        this.openModal('view', e.row);
         break;
       case 'edit':
-        console.log('Editar:', e.row);
+        this.openModal('edit', e.row);
         break;
       case 'delete':
-        this.svc.delete(e.row.id).subscribe(() => this.refresh());
-        break;
-      case 'duplicate':
-        console.log('Duplicar artículo:', e.row);
+        this.openModal('delete', e.row);
         break;
     }
   }
