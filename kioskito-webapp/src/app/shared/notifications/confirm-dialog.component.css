@@ -1,0 +1,72 @@
+.confirm-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 28px 24px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+  max-width: 360px;
+}
+
+/* 🔹 Ícono más grande y visualmente centrado */
+.icon-container {
+  background-color: #fdecea;
+  border-radius: 50%;
+  padding: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.warning-icon {
+  color: #c62828;
+  font-size: 52px;
+}
+
+/* 🔹 Título más proporcionado */
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a3d66;
+  margin: 6px 0 8px;
+  line-height: 1.2;
+}
+
+/* 🔹 Mensaje con mejor legibilidad */
+.message {
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+/* 🔹 Botones */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.btn-cancel {
+  color: #1a3d66;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.btn-confirm {
+  background-color: #c62828;
+  color: #fff;
+  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(198, 40, 40, 0.3);
+  transition: background 0.2s ease;
+}
+
+.btn-confirm:hover {
+  background-color: #b71c1c;
+}

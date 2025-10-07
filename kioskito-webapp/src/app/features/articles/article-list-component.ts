@@ -6,6 +6,7 @@ import { ArticleService } from '../../services/article.service';
 import { Article } from '../../models/article.model';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActionModalComponent } from '../../shared/modals/action-modal-component';
+import { NotificationService } from '../../shared/notifications/notification.service'; // ✅ nuevo
 
 @Component({
   selector: 'app-articles-list',
@@ -33,7 +34,7 @@ export class ArticlesListComponent {
     { field: 'sku', header: 'SKU', type: 'text' },
     { field: 'salePrice', header: 'Precio Venta', type: 'currency' },
     { field: 'consignmentPrice', header: 'Precio Consignación', type: 'currency' },
-    { field: 'isActive', header: 'Estado', type: 'status' }
+    { field: 'status', header: 'Estado', type: 'status' }
   ];
 
   actions: TableAction[] = [
@@ -44,20 +45,25 @@ export class ArticlesListComponent {
 
   data: Article[] = [];
 
-  constructor(private svc: ArticleService, private dialog: MatDialog) {
+  constructor(
+    private svc: ArticleService,
+    private dialog: MatDialog,
+    private notify: NotificationService
+  ) {
     this.refresh();
   }
 
   refresh() {
     this.svc.getAll().subscribe({
-      next: (res) => this.data = res,
-      error: (err) => console.error('Error cargando artículos', err)
+      next: (res) => (this.data = res),
+      error: (err) => this.notify.error('Error cargando artículos')
     });
   }
 
   /** 🔹 Abre modal según acción (crear, editar, eliminar o ver) */
   openModal(action: 'create' | 'edit' | 'delete' | 'view', article?: Article) {
     const dialogRef = this.dialog.open(ActionModalComponent, {
+      width: '420px',
       data: {
         entity: 'Artículo',
         action,
@@ -66,43 +72,60 @@ export class ArticlesListComponent {
           { name: 'sku', label: 'SKU', type: 'text' },
           { name: 'salePrice', label: 'Precio Venta', type: 'number' },
           { name: 'consignmentPrice', label: 'Precio Consignación', type: 'number' },
-          { name: 'isActive', label: 'Activo', type: 'boolean' }
+          { name: 'status', label: 'Estado', type: 'boolean' }
         ],
         value: article
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (!result) return;
 
       switch (result.action) {
         case 'create':
-          this.svc.create(result.value).subscribe(() => this.refresh());
+          this.svc.create(result.value).subscribe({
+            next: () => {
+              this.refresh();
+              this.notify.success('Artículo creado correctamente');
+            },
+            error: () => this.notify.error('Error al crear el artículo')
+          });
           break;
+
         case 'edit':
           if (article)
-            this.svc.update(article.id, result.value).subscribe(() => this.refresh());
+            this.svc.update(article.id, result.value).subscribe({
+              next: () => {
+                this.refresh();
+                this.notify.success('Artículo actualizado correctamente');
+              },
+              error: () => this.notify.error('Error al actualizar el artículo')
+            });
           break;
+
         case 'delete':
-          if (article)
-            this.svc.delete(article.id).subscribe(() => this.refresh());
+          if (article) {
+            const confirmed = await this.notify.confirm(
+              'Eliminar artículo',
+              `¿Estás seguro de eliminar "${article.name}"?`
+            );
+            if (!confirmed) return;
+
+            this.svc.delete(article.id).subscribe({
+              next: () => {
+                this.refresh();
+                this.notify.success('Artículo eliminado correctamente');
+              },
+              error: () => this.notify.error('Error al eliminar el artículo')
+            });
+          }
           break;
       }
     });
   }
 
   /** 🔹 Interacción desde la tabla */
-  onAction(e: { action: string, row: Article }) {
-    switch (e.action) {
-      case 'view':
-        this.openModal('view', e.row);
-        break;
-      case 'edit':
-        this.openModal('edit', e.row);
-        break;
-      case 'delete':
-        this.openModal('delete', e.row);
-        break;
-    }
+  onAction(e: { action: string; row: Article }) {
+    this.openModal(e.action as any, e.row);
   }
 }

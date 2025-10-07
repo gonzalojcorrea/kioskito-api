@@ -4,23 +4,23 @@
   <form [formGroup]="form" class="modal-form">
     <ng-container *ngFor="let field of data.fields">
       <div class="form-field">
+        <!-- 🔹 Mostrar label siempre arriba -->
         <label>{{ field.label }}</label>
 
         <ng-container [ngSwitch]="field.type">
 
-          <input *ngSwitchCase="'text'" matInput [formControlName]="field.name" [readonly]="isReadOnly" />
-          <input *ngSwitchCase="'number'" matInput type="number" [formControlName]="field.name" [readonly]="isReadOnly" />
-          <input *ngSwitchCase="'date'" matInput type="date" [formControlName]="field.name" [readonly]="isReadOnly" />
+          <input *ngSwitchCase="'text'" matInput [formControlName]="field.name" />
+          <input *ngSwitchCase="'number'" matInput type="number" [formControlName]="field.name" />
+          <input *ngSwitchCase="'date'" matInput type="date" [formControlName]="field.name" />
 
-          <mat-select *ngSwitchCase="'select'" [formControlName]="field.name" [disabled]="isReadOnly">
+          <mat-select *ngSwitchCase="'select'" [formControlName]="field.name">
             <mat-option *ngFor="let opt of field.options" [value]="opt">{{ opt }}</mat-option>
           </mat-select>
 
-          <mat-slide-toggle *ngSwitchCase="'boolean'" [formControlName]="field.name" [disabled]="isReadOnly">
-            {{ field.label }}
-          </mat-slide-toggle>
+          <!-- 🔹 Switch sin texto al costado -->
+          <mat-slide-toggle *ngSwitchCase="'boolean'" [formControlName]="field.name"></mat-slide-toggle>
 
-          <textarea *ngSwitchCase="'textarea'" matInput [formControlName]="field.name" [readonly]="isReadOnly"></textarea>
+          <textarea *ngSwitchCase="'textarea'" matInput [formControlName]="field.name"></textarea>
 
         </ng-container>
       </div>
@@ -30,9 +30,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-stroked-button color="primary" (click)="cancel()">Cancelar</button>
-  <button mat-flat-button 
-          [color]="data.action === 'delete' ? 'warn' : 'primary'"
-          (click)="submit()">
+  <button mat-flat-button [color]="data.action === 'delete' ? 'warn' : 'primary'" (click)="submit()">
     {{ actionLabel }}
   </button>
 </mat-dialog-actions>

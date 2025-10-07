@@ -8,31 +8,79 @@ h2 {
 .modal-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   padding-top: 8px;
 }
 
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 label {
   font-size: 13px;
   font-weight: 500;
-  color: #555;
+  color: #444;
 }
 
+/* 🔹 Inputs más modernos y compactos */
+input[matInput],
+textarea[matInput],
+mat-select {
+  background-color: #f9fafc;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  color: #1a1a1a;
+  transition: all 0.2s ease-in-out;
+}
+
+input[matInput]:focus,
+textarea[matInput]:focus,
+mat-select:focus-within {
+  border-color: #1a3d66;
+  box-shadow: 0 0 0 2px rgba(26, 61, 102, 0.15);
+  outline: none;
+}
+
+/* 🔹 Textarea más compacto también */
+textarea[matInput] {
+  min-height: 70px;
+  resize: vertical;
+}
+
+/* 🔹 Dialog y acciones */
 mat-dialog-content {
   min-width: 420px;
   max-width: 500px;
+  max-height: 75vh;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 mat-dialog-actions {
   padding: 12px 16px;
+  margin-top: 8px;
 }
 
 button[mat-flat-button] {
   font-weight: 600;
+  border-radius: 8px;
+  padding: 6px 20px;
+}
+
+button[mat-stroked-button] {
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 6px 20px;
+  color: #1a3d66;
+  border-color: #1a3d66;
+}
+
+/* 🔹 Switch (más chico y alineado) */
+mat-slide-toggle {
+  transform: scale(0.9);
+  margin-top: 2px;
 }
