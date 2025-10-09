@@ -21,6 +21,13 @@ export const DASHBOARD_ROUTES: Routes = [
       //   loadComponent: () =>
       //     import('../inventarios/inventario-list.component').then(m => m.InventarioListComponent)
       // },
+
+      {
+        path: 'clientes',
+        loadComponent: () =>
+          import('../customers/customers-list-component.component').then(m => m.CustomersListComponent)
+      },
+
       { path: '', pathMatch: 'full', redirectTo: 'home' } 
     ]
   }

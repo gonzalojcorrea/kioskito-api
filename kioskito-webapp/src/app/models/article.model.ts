@@ -5,5 +5,5 @@ export interface Article {
     sku?: string;
     salePrice?: number;
     consignmentPrice?: number;
-    isActive: boolean;
+    status: boolean;
 }  

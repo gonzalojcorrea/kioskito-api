@@ -17,11 +17,38 @@
       "status": true
     },
     {
-      "id": "",
+      "id": "3",
       "name": "Nuevo artículo",
       "sku": "SKU509",
       "salePrice": 0,
       "consignmentPrice": 0,
+      "status": true
+    }
+  ],
+
+  "customers": [
+    {
+      "id": "1",
+      "name": "Juan Pérez",
+      "email": "juan.perez@gmail.com",
+      "phone": "381-5551234",
+      "address": "Av. Siempre Viva 742",
+      "status": true
+    },
+    {
+      "id": "2",
+      "name": "María González",
+      "email": "maria.gonzalez@yahoo.com",
+      "phone": "381-5559876",
+      "address": "Calle Mitre 123",
+      "status": false
+    },
+    {
+      "id": "3",
+      "name": "Carlos Díaz",
+      "email": "cdiaz@empresa.com",
+      "phone": "381-5557788",
+      "address": "B° Centro - Tucumán",
       "status": true
     }
   ]
