@@ -25,15 +25,14 @@
       "status": true
     }
   ],
-
   "customers": [
     {
-      "id": "1",
-      "name": "Juan Pérez",
+      "name": "Juan Esteban Pérez ",
       "email": "juan.perez@gmail.com",
       "phone": "381-5551234",
       "address": "Av. Siempre Viva 742",
-      "status": true
+      "status": true,
+      "id": "1"
     },
     {
       "id": "2",
@@ -51,5 +50,31 @@
       "address": "B° Centro - Tucumán",
       "status": true
     }
-  ]
+  ],
+  "users": [
+  {
+    "id": 1,
+    "email": "gera@gmail.com",
+    "password": "1234",
+    "name": "Gerardo Valdez",
+    "role": "Admin",
+    "status": true
+  },
+  {
+    "id": 2,
+    "email": "empleado@test.com",
+    "password": "123456",
+    "name": "Empleado",
+    "role": "Empleado",
+    "status": true
+  },
+  {
+    "id": 3,
+    "email": "suspendido@test.com",
+    "password": "123456",
+    "name": "Usuario Suspendido",
+    "role": "Empleado",
+    "status": false
+  }
+]
 }

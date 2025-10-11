@@ -12,6 +12,7 @@ export class DashboardLayoutComponent {
   menu: NavItem[] = [
     { label: 'Artículos', icon: 'move_up', path: 'articulos' },
     { label: 'Inventarios', icon: 'inventory_2', path: 'inventarios' },
-    { label: 'Clientes', icon: 'people', path: 'clientes' }
+    { label: 'Clientes', icon: 'groups', path: 'clientes' },
+    { label: 'Usuarios', icon: 'people', path: 'usuarios' }
   ];
 }

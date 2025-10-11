@@ -1,40 +1,60 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { map, catchError, of } from 'rxjs';
 
-interface UserState {
-  token: string | null;
-  email: string | null;
+export interface UserSession {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+  status: boolean;
+  token?: string; // opcional, si después usás JWT real
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private state = signal<UserState>({ token: null, email: null });
+  private readonly apiUrl = 'http://localhost:3000/users';
+  private readonly storageKey = 'kioskito_user';
 
-  readonly isAuthenticated = computed(() => !!this.state().token);
-  readonly email = computed(() => this.state().email);
+  // signals
+  currentUser = signal<UserSession | null>(null);
 
-  constructor() {
-    const saved = localStorage.getItem('auth');
-    if (saved) {
-      try {
-        const parsed: UserState = JSON.parse(saved);
-        this.state.set(parsed);
-      } catch {}
-    }
+  constructor(private http: HttpClient, private router: Router) {
+    const saved = localStorage.getItem(this.storageKey);
+    if (saved) this.currentUser.set(JSON.parse(saved));
   }
 
-  login(email: string, password: string): boolean {
-    // For now accept any non-empty credentials; simulate token
-    if (email && password) {
-      const token = 'fake-token-' + Math.random().toString(36).slice(2);
-      this.state.set({ token, email });
-      localStorage.setItem('auth', JSON.stringify(this.state()));
-      return true;
-    }
-    return false;
+  /** 🔹 Login básico contra json-server */
+  login(email: string, password: string) {
+    return this.http.get<UserSession[]>(`${this.apiUrl}?email=${email}&password=${password}`).pipe(
+      map((users) => {
+        if (users.length === 1 && users[0].status) {
+          const user = users[0];
+          localStorage.setItem(this.storageKey, JSON.stringify(user));
+          this.currentUser.set(user);
+          return true;
+        }
+        return false;
+      }),
+      catchError(() => of(false))
+    );
   }
 
-  logout(): void {
-    this.state.set({ token: null, email: null });
-    localStorage.removeItem('auth');
+  /** 🔹 Cerrar sesión */
+  logout() {
+    localStorage.removeItem(this.storageKey);
+    this.currentUser.set(null);
+    this.router.navigateByUrl('/login');
+  }
+
+  /** 🔹 Saber si hay sesión activa */
+  isLoggedIn(): boolean {
+    return !!this.currentUser();
+  }
+
+  /** 🔹 Obtener usuario actual */
+  getUser(): UserSession | null {
+    return this.currentUser();
   }
 }

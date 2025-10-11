@@ -33,16 +33,19 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
-  onSubmit() {
-    if (this.form.invalid) return;
-    this.loading.set(true);
-    const { email, password } = this.form.value;
-    const success = this.auth.login(email!, password!);
+onSubmit() {
+  if (this.form.invalid) return;
+
+  this.loading.set(true);
+  const { email, password } = this.form.value;
+
+  this.auth.login(email!, password!).subscribe((success) => {
+    this.loading.set(false);
     if (success) {
       this.router.navigateByUrl('/dashboard');
     } else {
-      this.error.set('Invalid credentials');
+      this.error.set('Credenciales inválidas o usuario inactivo');
     }
-    this.loading.set(false);
-  }
+  });
+}
 }

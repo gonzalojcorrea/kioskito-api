@@ -27,7 +27,11 @@ export const DASHBOARD_ROUTES: Routes = [
         loadComponent: () =>
           import('../customers/customers-list-component.component').then(m => m.CustomersListComponent)
       },
-
+       {
+        path: 'usuarios',
+        loadComponent: () =>
+          import('../users/users-list-component').then(m => m.UsersListComponent)
+      },
       { path: '', pathMatch: 'full', redirectTo: 'home' } 
     ]
   }

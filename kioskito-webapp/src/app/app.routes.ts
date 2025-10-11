@@ -25,7 +25,12 @@ export const APP_ROUTES: Routes = [
     loadComponent: () =>
       import('./features/customers/customers-list-component.component').then(m => m.CustomersListComponent)
   },
-
+  {
+    path: 'usuarios',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/users/users-list-component').then(m => m.UsersListComponent)
+  },
   { path: '', pathMatch: 'full', redirectTo: 'login' },
   { path: '**', redirectTo: 'login' }
 ];
