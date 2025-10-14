@@ -4,14 +4,14 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';   // 👈 agregado
+import { MatMenuModule } from '@angular/material/menu';
 import { TableColumn } from './tableColumn';
 
 export interface TableAction {
-  action: string;             
-  label?: string;              
-  icon?: string;               
-  type?: ActionDefault;        // 👈 puede ser acción estándar
+  action: string;
+  label?: string;
+  icon?: string;
+  type?: ActionDefault;
 }
 
 export enum ActionDefault {
@@ -29,7 +29,7 @@ export enum ActionDefault {
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
-    MatMenuModule              // 👈 agregado
+    MatMenuModule
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
@@ -45,6 +45,7 @@ export class TableComponent implements OnChanges {
   @Output() pageChanged = new EventEmitter<{ pageIndex: number, pageSize: number }>();
 
   displayedColumns: string[] = [];
+  sortState: { column: string, direction: 'asc' | 'desc' | '' } = { column: '', direction: '' };
 
   ngOnChanges() {
     this.displayedColumns = this.columns.map(c => c.field);
@@ -61,7 +62,37 @@ export class TableComponent implements OnChanges {
     this.pageChanged.emit({ pageIndex: event.pageIndex, pageSize: event.pageSize });
   }
 
-  /** 🔥 Devuelve icono según tipo estándar o custom */
+  /** 🔹 Ordenamiento visual y funcional */
+  sortColumn(col: any) {
+    if (this.sortState.column === col.field) {
+      this.sortState.direction =
+        this.sortState.direction === 'asc'
+          ? 'desc'
+          : this.sortState.direction === 'desc'
+          ? ''
+          : 'asc';
+    } else {
+      this.sortState = { column: col.field, direction: 'asc' };
+    }
+
+    if (this.sortState.direction) {
+      const dir = this.sortState.direction === 'asc' ? 1 : -1;
+      this.data = [...this.data.sort((a, b) =>
+        (a[col.field] > b[col.field] ? dir : -dir)
+      )];
+    } else {
+      this.data = [...this.data];
+    }
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortState.column !== field) return 'unfold_more';
+    if (this.sortState.direction === 'asc') return 'arrow_upward';
+    if (this.sortState.direction === 'desc') return 'arrow_downward';
+    return 'unfold_more';
+  }
+
+  /** 🔹 Icono de acción */
   getActionIcon(action: TableAction): string {
     if (action.type === ActionDefault.View) return 'visibility';
     if (action.type === ActionDefault.Edit) return 'edit';
@@ -69,7 +100,7 @@ export class TableComponent implements OnChanges {
     return action.icon ?? 'help';
   }
 
-  /** 🔥 Devuelve label según tipo estándar o custom */
+  /** 🔹 Etiqueta de acción */
   getActionLabel(action: TableAction): string {
     if (action.type === ActionDefault.View) return 'Ver';
     if (action.type === ActionDefault.Edit) return 'Editar';

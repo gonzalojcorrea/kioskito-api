@@ -222,7 +222,7 @@ export class SidebarComponent {
   async confirmLogout() {
     const confirmed = await this.notify.confirm(
       'Cerrar sesión',
-      '¿Estás seguro de que querés salir del sistema?'
+      '¿Estás seguro de salir del sistema?'
     );
     if (confirmed) this.logout.emit();
   }

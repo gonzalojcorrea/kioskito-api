@@ -18,10 +18,8 @@ import { MatIconModule } from '@angular/material/icon';
       <p class="message">{{ data.message }}</p>
 
       <div class="actions">
-        <button mat-button (click)="dialogRef.close(false)" class="btn-cancel">Cancelar</button>
-        <button mat-raised-button color="warn" (click)="dialogRef.close(true)" class="btn-confirm">
-          Confirmar
-        </button>
+        <button (click)="dialogRef.close(false)" class="btn btn-cancel">Cancelar</button>
+        <button (click)="dialogRef.close(true)" class="btn btn-confirm">Confirmar</button>
       </div>
     </div>
   `,
@@ -73,32 +71,48 @@ import { MatIconModule } from '@angular/material/icon';
     .actions {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 16px;
       width: 100%;
     }
 
-    .btn-cancel {
-      color: #1a3d66;
+    /* 🌟 Estilo base común para todos los botones */
+    .btn {
       font-weight: 600;
-      letter-spacing: 0.3px;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      min-width: 110px;
     }
 
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* 🔹 Cancelar → azul corporativo */
+    .btn-cancel {
+      background-color: #1a3d66;
+      box-shadow: 0 2px 5px rgba(26, 61, 102, 0.3);
+    }
+
+    .btn-cancel:hover {
+      background-color: #163455;
+    }
+
+    /* 🔹 Confirmar → rojo alerta */
     .btn-confirm {
       background-color: #c62828;
-      color: #fff;
-      font-weight: 600;
-      padding: 6px 22px;
-      border-radius: 8px;
       box-shadow: 0 2px 5px rgba(198, 40, 40, 0.25);
-      transition: all 0.2s ease;
     }
 
     .btn-confirm:hover {
-      transform: translateY(-1px);
       background-color: #b71c1c;
     }
 
-    /* 🔹 Versión mobile */
+    /* 🔹 Responsive */
     @media (max-width: 480px) {
       .confirm-dialog {
         max-width: 90vw;
@@ -118,8 +132,9 @@ import { MatIconModule } from '@angular/material/icon';
         font-size: 18px;
       }
 
-      .btn-confirm {
-        padding: 6px 18px;
+      .btn {
+        padding: 10px 20px;
+        min-width: 100px;
       }
     }
   `]
