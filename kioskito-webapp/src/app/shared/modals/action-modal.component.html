@@ -29,8 +29,22 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-stroked-button color="primary" (click)="cancel()">Cancelar</button>
-  <button mat-flat-button [color]="data.action === 'delete' ? 'warn' : 'primary'" (click)="submit()">
+  <button
+    *ngIf="data.action !== 'view'"
+    mat-stroked-button
+    class="btn btn-cancel"
+    (click)="cancel()">
+    Cancelar
+  </button>
+
+  <button
+    mat-flat-button
+    [ngClass]="{
+      'btn btn-primary': data.action !== 'delete',
+      'btn btn-delete': data.action === 'delete'
+    }"
+    (click)="submit()">
     {{ actionLabel }}
   </button>
 </mat-dialog-actions>
+

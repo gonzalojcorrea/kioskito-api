@@ -30,7 +30,7 @@
       "name": "Juan Esteban Pérez ",
       "email": "juan.perez@gmail.com",
       "phone": "381-5551234",
-      "address": "Av. Siempre Viva 742",
+      "address": "Belgrano 750, Córdoba, Argentina",
       "status": true,
       "id": "1"
     },
@@ -39,7 +39,7 @@
       "name": "María González",
       "email": "maria.gonzalez@yahoo.com",
       "phone": "381-5559876",
-      "address": "Calle Mitre 123",
+      "address": "Av. Colón 350, Córdoba, Argentina",
       "status": false
     },
     {
@@ -47,34 +47,34 @@
       "name": "Carlos Díaz",
       "email": "cdiaz@empresa.com",
       "phone": "381-5557788",
-      "address": "B° Centro - Tucumán",
+      "address": "Av. Rafael Núñez 4200, Córdoba, Argentina",
       "status": true
     }
   ],
   "users": [
-  {
-    "id": 1,
-    "email": "gera@gmail.com",
-    "password": "1234",
-    "name": "Gerardo Valdez",
-    "role": "Admin",
-    "status": true
-  },
-  {
-    "id": 2,
-    "email": "empleado@test.com",
-    "password": "123456",
-    "name": "Empleado",
-    "role": "Empleado",
-    "status": true
-  },
-  {
-    "id": 3,
-    "email": "suspendido@test.com",
-    "password": "123456",
-    "name": "Usuario Suspendido",
-    "role": "Empleado",
-    "status": false
-  }
-]
+    {
+      "id": 1,
+      "email": "gera@gmail.com",
+      "password": "1234",
+      "name": "Gerardo Valdez",
+      "role": "Admin",
+      "status": true
+    },
+    {
+      "id": 2,
+      "email": "empleado@test.com",
+      "password": "123456",
+      "name": "Empleado",
+      "role": "Empleado",
+      "status": true
+    },
+    {
+      "id": 3,
+      "email": "suspendido@test.com",
+      "password": "123456",
+      "name": "Usuario Suspendido",
+      "role": "Empleado",
+      "status": false
+    }
+  ]
 }

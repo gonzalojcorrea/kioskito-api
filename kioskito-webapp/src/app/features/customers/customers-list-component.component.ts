@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent, TableColumn, TableAction, ActionDefault } from '../../shared/table/table.component';
-import { ToolbarComponent } from '../../shared/toolbar/toolbar.component';
+import { ToolbarComponent, ToolbarAction } from '../../shared/toolbar/toolbar.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActionModalComponent } from '../../shared/modals/action-modal-component';
 import { NotificationService } from '../../shared/notifications/notification.service';
 import { CustomerService } from '../../services/customer.service';
 import { Customer } from '../../models/customer.model';
+import { MapCustomersComponent } from './map-customers/map-customers.component';
 
 @Component({
   selector: 'app-customers-list',
@@ -16,7 +17,9 @@ import { Customer } from '../../models/customer.model';
     <app-toolbar
       title="Clientes"
       [showAdd]="true"
-      (add)="openModal('create')">
+      [actions]="toolbarActions"
+      (add)="openModal('create')"
+      (actionClicked)="onToolbarAction($event)">
     </app-toolbar>
 
     <app-table
@@ -34,13 +37,18 @@ export class CustomersListComponent {
     { field: 'email', header: 'Email', type: 'text' },
     { field: 'phone', header: 'Teléfono', type: 'text' },
     { field: 'address', header: 'Dirección', type: 'text' },
-    { field: 'status', header: 'Estado', type: 'status' } // ✅ nuevo campo
+    { field: 'status', header: 'Estado', type: 'status' }
   ];
 
   actions: TableAction[] = [
     { action: 'view', type: ActionDefault.View },
     { action: 'edit', type: ActionDefault.Edit },
     { action: 'delete', type: ActionDefault.Delete }
+  ];
+
+  /** 🔹 Acciones extras del toolbar */
+  toolbarActions: ToolbarAction[] = [
+    { icon: 'map', label: 'Ver mapa', action: 'view-map' }
   ];
 
   data: Customer[] = [];
@@ -60,7 +68,6 @@ export class CustomersListComponent {
     });
   }
 
-  /** 🔹 Abre modal según acción (crear, editar, eliminar o ver) */
   openModal(action: 'create' | 'edit' | 'delete' | 'view', customer?: Customer) {
     const dialogRef = this.dialog.open(ActionModalComponent, {
       width: '420px',
@@ -72,7 +79,7 @@ export class CustomersListComponent {
           { name: 'email', label: 'Email', type: 'text', required: true },
           { name: 'phone', label: 'Teléfono', type: 'text' },
           { name: 'address', label: 'Dirección', type: 'text' },
-          { name: 'status', label: 'Estado', type: 'boolean' } // ✅ agregado al modal
+          { name: 'status', label: 'Estado', type: 'boolean' }
         ],
         value: customer
       }
@@ -127,5 +134,23 @@ export class CustomersListComponent {
   /** 🔹 Interacción desde la tabla */
   onAction(e: { action: string; row: Customer }) {
     this.openModal(e.action as any, e.row);
+  }
+
+  /** 🔹 Maneja las acciones personalizadas del toolbar */
+  onToolbarAction(action: string) {
+    if (action === 'view-map') this.openMap();
+  }
+
+  /** 🔹 Abre el modal con el mapa */
+  openMap() {
+    if (!this.data.length) {
+      return;
+    }
+
+    this.dialog.open(MapCustomersComponent, {
+      width: '80vw',
+      height: '80vh',
+      data: this.data
+    });
   }
 }

@@ -1,10 +1,14 @@
-h2 {
-  font-size: 20px;
+
+/* 🔹 Header del modal */
+.mat-mdc-dialog-title {
+  background-color: #1a3d66;
+  color: #fff;
+  font-size: 18px;
   font-weight: 600;
-  color: #1a3d66;
-  margin-bottom: 10px;
+  padding: 5px 10px;
 }
 
+/* 🧩 Formulario */
 .modal-form {
   display: flex;
   flex-direction: column;
@@ -24,7 +28,7 @@ label {
   color: #444;
 }
 
-/* 🔹 Inputs más modernos y compactos */
+/* 🔹 Inputs modernos */
 input[matInput],
 textarea[matInput],
 mat-select {
@@ -45,13 +49,12 @@ mat-select:focus-within {
   outline: none;
 }
 
-/* 🔹 Textarea más compacto también */
 textarea[matInput] {
   min-height: 70px;
   resize: vertical;
 }
 
-/* 🔹 Dialog y acciones */
+/* 🔹 Contenido y layout */
 mat-dialog-content {
   min-width: 420px;
   max-width: 500px;
@@ -63,24 +66,69 @@ mat-dialog-content {
 mat-dialog-actions {
   padding: 12px 16px;
   margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
-button[mat-flat-button] {
-  font-weight: 600;
-  border-radius: 8px;
-  padding: 6px 20px;
-}
-
-button[mat-stroked-button] {
-  font-weight: 600;
-  border-radius: 8px;
-  padding: 6px 20px;
-  color: #1a3d66;
-  border-color: #1a3d66;
-}
-
-/* 🔹 Switch (más chico y alineado) */
+/* 🔹 Switch */
 mat-slide-toggle {
   transform: scale(0.9);
   margin-top: 2px;
+}
+
+/* === BOTONES ESTILIZADOS === */
+
+/* Base */
+.btn,
+button.mat-mdc-button-base,
+button[mat-flat-button],
+button[mat-stroked-button] {
+  font-weight: 600;
+  border-radius: 4px !important; /* 🔹 Fuerza rectángulo */
+  padding: 6px 20px !important;
+  text-transform: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  box-shadow: none !important;
+}
+/* Cancelar */
+.btn-cancel {
+  background-color: #fff;
+  color: #1a3d66;
+  border: 1px solid #1a3d66;
+}
+
+.btn-cancel:hover {
+  background-color: #eaf0fa;
+  color: #005cbb;
+  border-color: #0f2b4c;
+}
+
+/* Guardar / Actualizar / Cerrar */
+.btn-primary {
+  background-color: #1a3d66;
+  color: #fff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0f2b4c;
+}
+
+/* Eliminar */
+.btn-delete {
+  background-color: #d32f2f;
+  color: #fff;
+  border: none;
+}
+
+.btn-delete:hover {
+  background-color: #b71c1c;
+}
+
+/* Foco limpio */
+button:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }

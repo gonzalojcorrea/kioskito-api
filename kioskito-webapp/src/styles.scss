@@ -18,3 +18,9 @@ body.dark-theme { background:#10161d; color:#e2e8f0; }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.mat-mdc-dialog-surface {
+  --mdc-dialog-container-shape: 6px !important; /* o 4px si querés más recto */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); /* opcional: sombra más elegante */
+}
