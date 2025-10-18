@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Customer } from '../../../models/customer.model';
 import { GeocodingService } from '../../../services/geolocation/geocoding.service';
 import { MatButtonModule } from '@angular/material/button';
+import { ConfigService } from '../../../services/configuration.service';
 
 @Component({
   selector: 'app-map-customers',
@@ -15,11 +16,17 @@ import { MatButtonModule } from '@angular/material/button';
       <h2 class="mat-mdc-dialog-title">Mapa de Clientes</h2>
 
       <div class="map-container">
-        <google-map
-          width="100%"
-          height="100%"
-          [center]="center"
-          [zoom]="zoom">
+        <google-map width="100%" height="100%" [center]="center" [zoom]="zoom">
+          <!-- 🏠 Marcador del depósito central -->
+          <map-marker
+            *ngIf="centralMarker"
+            [position]="centralMarker.position"
+            [label]="centralMarker.label"
+            [title]="centralMarker.title"
+            [icon]="centralMarker.icon">
+          </map-marker>
+
+          <!-- 📍 Marcadores de clientes -->
           <map-marker
             *ngFor="let m of markers"
             [position]="m.position"
@@ -41,7 +48,7 @@ import { MatButtonModule } from '@angular/material/button';
     .map-dialog {
       display: flex;
       flex-direction: column;
-      height: 90vh; /* 🔹 Más alto */
+      height: 90vh;
       width: 100%;
       background: #fff;
       border-radius: 6px;
@@ -85,12 +92,12 @@ import { MatButtonModule } from '@angular/material/button';
       border-top: 1px solid #ddd;
     }
 
-    /* === BOTONES (idénticos al modal de acción) === */
+    /* === BOTONES === */
     .btn,
     button.mat-mdc-button-base {
       font-weight: 600;
       border-radius: 4px;
-      padding: 8px 24px; /* 🔹 Igual que modal acción */
+      padding: 8px 24px;
       text-transform: none;
       transition: all 0.2s ease;
       cursor: pointer;
@@ -119,7 +126,6 @@ import { MatButtonModule } from '@angular/material/button';
       background-color: #0f2b4c;
     }
 
-    /* Sin halo de foco */
     button:focus {
       outline: none !important;
       box-shadow: none !important;
@@ -130,14 +136,44 @@ export class MapCustomersComponent implements OnInit {
   center: google.maps.LatLngLiteral = { lat: -34.6037, lng: -58.3816 };
   zoom = 11;
   markers: any[] = [];
+  originAddress: string | null = null;
+  centralMarker: any = null;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Customer[],
     private geo: GeocodingService,
+    private configService: ConfigService, // 🟢 agregado
     private dialogRef: MatDialogRef<MapCustomersComponent>
   ) {}
 
   ngOnInit() {
+    // 🟢 obtener la dirección de la central
+    this.configService.getConfig().subscribe({
+      next: (config) => {
+        this.originAddress = config.address;
+
+        // 🟢 convertir dirección en coordenadas y agregar marcador
+        this.geo.geocodeAddress(config.address).subscribe(coords => {
+          if (coords) {
+            this.centralMarker = {
+              position: coords,
+              label: { text: 'Central', color: '#1a3d66', fontWeight: 'bold', fontSize: '13px' },
+              title: config.companyName,
+              icon: {
+                url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                scaledSize: new google.maps.Size(40, 40)
+              }
+            };
+
+            // si no hay otros marcadores, centrar en la central
+            if (this.markers.length === 0) this.center = coords;
+          }
+        });
+      },
+      error: (err) => console.error('Error cargando configuración', err)
+    });
+
+    // 🔹 Cargar coordenadas de clientes
     this.data.forEach(c => {
       if (c.address) {
         this.geo.geocodeAddress(c.address).subscribe(coords => {
@@ -147,7 +183,7 @@ export class MapCustomersComponent implements OnInit {
               label: { text: c.name, color: '#0f2b4c', fontWeight: '500', fontSize: '12px' },
               title: c.name
             });
-            if (this.markers.length === 1) this.center = coords;
+            if (this.markers.length === 1 && !this.centralMarker) this.center = coords;
           }
         });
       }
@@ -169,8 +205,10 @@ export class MapCustomersComponent implements OnInit {
       alert('⚠️ No hay direcciones disponibles para trazar la ruta.');
       return;
     }
-    const addresses = clientsWithAddress.map(c => encodeURIComponent(c.address)).join('/');
-    const url = `https://www.google.com/maps/dir/${addresses}`;
+
+    const origin = this.originAddress ? encodeURIComponent(this.originAddress) + '/' : '';
+    const destinations = clientsWithAddress.map(c => encodeURIComponent(c.address)).join('/');
+    const url = `https://www.google.com/maps/dir/${origin}${destinations}`;
     window.open(url, '_blank');
   }
 }

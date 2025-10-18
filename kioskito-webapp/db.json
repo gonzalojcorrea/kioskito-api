@@ -76,5 +76,9 @@
       "role": "Empleado",
       "status": false
     }
-  ]
+  ],
+  "config": {
+    "companyName": "Kioskito Central",
+    "address": "Av. Colón 1234, Córdoba, Argentina"
+  }
 }
