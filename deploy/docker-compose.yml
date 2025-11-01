@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: ..
-      dockerfile: backend/src/API/Dockerfile
+      dockerfile: kioskito-api/src/API/Dockerfile
       args:
         BUILD_CONFIGURATION: Release
     image: kioskito-api:latest
