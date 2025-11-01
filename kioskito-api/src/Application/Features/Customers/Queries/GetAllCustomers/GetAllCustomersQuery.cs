@@ -1,6 +1,7 @@
+using Application.Features.Customers.Common;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.Customers.Queries.GetAllCustomers;
 
-public sealed record GetAllCustomersQuery : IRequest<IReadOnlyList<Customer>>;
+public sealed record GetAllCustomersQuery : IRequest<IReadOnlyList<CustomerResponse>>;

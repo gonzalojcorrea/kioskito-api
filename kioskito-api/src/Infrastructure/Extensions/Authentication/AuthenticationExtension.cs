@@ -22,6 +22,18 @@ public static class AuthenticationExtension
     /// <returns></returns>
     public static IServiceCollection AddAuthenticationExtension(this IServiceCollection services, IConfiguration configuration, JwtSettings jwt)
     {
+        // Decodificar la clave desde Base64 o usar UTF8 si no es Base64
+        byte[] keyBytes;
+        try
+        {
+            keyBytes = Convert.FromBase64String(jwt.SecretKey);
+        }
+        catch
+        {
+            // Si no es Base64, usar UTF8 (debe tener al menos 32 caracteres para HS256)
+            keyBytes = Encoding.UTF8.GetBytes(jwt.SecretKey);
+        }
+
         // 1. Configure JWT settings
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(opt =>
@@ -34,9 +46,7 @@ public static class AuthenticationExtension
                 ValidateAudience = true,
                 ValidAudience = jwt.Audience,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(
-                                              Encoding.UTF8.GetBytes(jwt.SecretKey)
-                                          ),
+                IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };

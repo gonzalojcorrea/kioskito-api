@@ -3,6 +3,7 @@ using Domain.Interfaces;
 using Infrastructure.Configurations.Authentication;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,11 +40,17 @@ public static class InfrastructureServices
             s => configuration.GetSection(JwtSettings.SectionName).Bind(s));
         services.AddSingleton<IJwtService, JwtService>();
 
-        // 3. Bind JwtSettings
+        // 3. HttpContextAccessor (requerido para CurrentUserService)
+        services.AddHttpContextAccessor();
+        
+        // 4. Current User Service (para obtener información del usuario autenticado)
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+        // 5. Bind JwtSettings
         var section = configuration.GetSection(JwtSettings.SectionName);
         var jwt = section.Get<JwtSettings>();
 
-        // 4. Configure Authentication & Authorization
+        // 6. Configure Authentication & Authorization
         services.AddAuthenticationExtension(configuration, jwt);
         services.AddAuthorization();
 

@@ -1,9 +1,9 @@
+using Application.Features.Customers.Commands.DeleteCustomer;
 using Application.Features.Customers.Commands.RegisterCustomer;
 using Application.Features.Customers.Commands.UpdateCustomer;
-using Application.Features.Customers.Commands.DeleteCustomer;
+using Application.Features.Customers.Common;
 using Application.Features.Customers.Queries.GetAllCustomers;
 using Application.Features.Customers.Queries.GetCustomerById;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +17,7 @@ namespace API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/customers")]
-[Authorize]
+[AllowAnonymous]
 public class CustomersController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -46,10 +46,10 @@ public class CustomersController : ControllerBase
     /// <returns>Listado de clientes.</returns>
     [HttpGet]
     [SwaggerOperation(Summary = "Listar clientes", Description = "Obtiene todos los clientes.")]
-    [SwaggerResponse(200, "Listado de clientes", typeof(IReadOnlyList<Customer>))]
+    [SwaggerResponse(200, "Listado de clientes", typeof(IReadOnlyList<CustomerResponse>))]
     [SwaggerResponse(401, "No autorizado", typeof(object))]
     [SwaggerResponse(500, "Error interno", typeof(object))]
-    public async Task<ActionResult<IReadOnlyList<Customer>>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<CustomerResponse>>> GetAll()
     {
         var list = await _mediator.Send(new GetAllCustomersQuery());
         return Ok(list);
@@ -62,11 +62,11 @@ public class CustomersController : ControllerBase
     /// <returns>Cliente encontrado.</returns>
     [HttpGet("{id:guid}")]
     [SwaggerOperation(Summary = "Obtener cliente", Description = "Obtiene un cliente por Id.")]
-    [SwaggerResponse(200, "Cliente encontrado", typeof(Customer))]
+    [SwaggerResponse(200, "Cliente encontrado", typeof(CustomerResponse))]
     [SwaggerResponse(404, "Cliente no encontrado", typeof(object))]
     [SwaggerResponse(401, "No autorizado", typeof(object))]
     [SwaggerResponse(500, "Error interno", typeof(object))]
-    public async Task<ActionResult<Customer>> GetById(Guid id)
+    public async Task<ActionResult<CustomerResponse>> GetById(Guid id)
     {
         var customer = await _mediator.Send(new GetCustomerByIdQuery(id));
         if (customer is null) return NotFound();

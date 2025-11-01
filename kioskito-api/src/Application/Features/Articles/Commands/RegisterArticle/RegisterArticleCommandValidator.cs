@@ -26,5 +26,17 @@ public class RegisterArticleCommandValidator : AbstractValidator<RegisterArticle
         RuleFor(x => x.ConsignmentPrice)
             .GreaterThanOrEqualTo(0).When(x => x.ConsignmentPrice.HasValue)
             .WithMessage("El precio de consignación debe ser >= 0");
+
+        RuleFor(x => x.UnitCost)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("El costo unitario debe ser >= 0");
+
+        RuleFor(x => x.InitialQuantity)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("La cantidad inicial debe ser >= 0");
+
+        RuleFor(x => x.MinStock)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("El stock mínimo debe ser >= 0");
     }
 }

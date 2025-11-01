@@ -8,18 +8,18 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["src/API/API.csproj", "src/API/"]
-COPY ["src/Application/Application.csproj", "src/Application/"]
-COPY ["src/Domain/Domain.csproj",         "src/Domain/"]
-COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
+COPY ["kioskito-api/src/API/API.csproj", "src/API/"]
+COPY ["kioskito-api/src/Application/Application.csproj", "src/Application/"]
+COPY ["kioskito-api/src/Domain/Domain.csproj",         "src/Domain/"]
+COPY ["kioskito-api/src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 RUN dotnet restore "src/API/API.csproj"
 
 COPY . .
-RUN dotnet build "src/API/API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "kioskito-api/src/API/API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "src/API/API.csproj" \
+RUN dotnet publish "kioskito-api/src/API/API.csproj" \
     -c $BUILD_CONFIGURATION \
     -o /app/publish \
     /p:UseAppHost=false

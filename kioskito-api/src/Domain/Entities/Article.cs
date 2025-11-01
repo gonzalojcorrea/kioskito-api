@@ -13,6 +13,7 @@ public class Article : BaseEntity
     public string? Sku { get; set; }
     public decimal? SalePrice { get; set; }
     public decimal? ConsignmentPrice { get; set; }
+    public bool IsActive { get; set; } = true;
 
     // Navigation properties
     public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();

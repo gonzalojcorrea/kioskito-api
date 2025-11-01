@@ -10,5 +10,8 @@ public sealed record RegisterArticleCommand(
     string? Description,
     string? Sku,
     decimal? SalePrice,
-    decimal? ConsignmentPrice
+    decimal? ConsignmentPrice,
+    decimal UnitCost,
+    int InitialQuantity,
+    int MinStock
 ) : IRequest<Guid>;

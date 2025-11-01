@@ -1,6 +1,232 @@
-@API_HostAddress = http://localhost:5264
+# @API_HostAddress = http://localhost:8080
+@API_HostAddress = https://localhost:44365
 
-GET {{API_HostAddress}}/weatherforecast/
+
+###
+
+### Register new user with Admin role
+POST {{API_HostAddress}}/api/auth/sign-up
+Content-Type: application/json
+
+{
+  "name": "Admin",
+  "lastName": "Sistema",
+  "email": "admin@kioskito.com",
+  "password": "Password123!",
+  "roleId": "520949d9-f95e-47b2-839c-075bbc0cc525"
+}
+
+###
+
+### Login with initial Admin user (from migration)
+POST {{API_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@kioskito.com",
+  "password": "Password123!"
+}
+
+###
+
+### Login with newly registered user
+POST {{API_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "carlos.rodriguez@kioskito.com",
+  "password": "Password123!"
+}
+
+###
+
+### Get all customers (requiere token)
+GET {{API_HostAddress}}/api/customers
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YzBiYjk1ZS0wODIzLTQ5ZDYtOGUxNC0xMzNlNjQyNzk0ZjIiLCJ1bmlxdWVfbmFtZSI6ImFkbWluQGtpb3NraXRvLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwibmJmIjoxNzYxNjkzNTI1LCJleHAiOjE3NjE3MDc5MjUsImlzcyI6Iktpb3NraXRvQXBpIiwiYXVkIjoiS2lvc2tpdG9BcGlDbGllbnRzIn0.-WQhYDqDfH4pxRPPb7TbEQLxBh9_c0JjYwD9d0XC4GE
+
+###
+
+### Get all users (no requiere token - AllowAnonymous)
+GET {{API_HostAddress}}/api/users
+Accept: application/json
+
+###
+
+### Create Customer 1 - Supermercado El Ahorro
+POST {{API_HostAddress}}/api/customers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YzBiYjk1ZS0wODIzLTQ5ZDYtOGUxNC0xMzNlNjQyNzk0ZjIiLCJ1bmlxdWVfbmFtZSI6ImFkbWluQGtpb3NraXRvLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwibmJmIjoxNzYxNjkzNTI1LCJleHAiOjE3NjE3MDc5MjUsImlzcyI6Iktpb3NraXRvQXBpIiwiYXVkIjoiS2lvc2tpdG9BcGlDbGllbnRzIn0.-WQhYDqDfH4pxRPPb7TbEQLxBh9_c0JjYwD9d0XC4GE
+
+{
+  "name": "Supermercado El Ahorro",
+  "email": "contacto@elahorro.com",
+  "phone": "+54 11 4567-8901",
+  "address": "Av. Corrientes 1234, CABA, Argentina"
+}
+
+###
+
+### Create Customer 2 - Kiosco La Esquina
+POST {{API_HostAddress}}/api/customers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YzBiYjk1ZS0wODIzLTQ5ZDYtOGUxNC0xMzNlNjQyNzk0ZjIiLCJ1bmlxdWVfbmFtZSI6ImFkbWluQGtpb3NraXRvLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9zZSI6IkFkbWluIiwibmJmIjoxNzYxNjkzNTI1LCJleHAiOjE3NjE3MDc5MjUsImlzcyI6Iktpb3NraXRvQXBpIiwiYXVkIjoiS2lvc2tpdG9BcGlDbGllbnRzIn0.-WQhYDqDfH4pxRPPb7TbEQLxBh9_c0JjYwD9d0XC4GE
+
+{
+  "name": "Kiosco La Esquina",
+  "email": "laesquina@kiosco.com",
+  "phone": "+54 11 4765-4321",
+  "address": "Calle San Martín 567, Córdoba, Argentina"
+}
+
+###
+
+### Create Customer 3 - Panadería Don Pedro
+POST {{API_HostAddress}}/api/customers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YzBiYjk1ZS0wODIzLTQ5ZDYtOGUxNC0xMzNlNjQyNzk0ZjIiLCJ1bmlxdWVfbmFtZSI6ImFkbWluQGtpb3NraXRvLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9zZSI6IkFkbWluIiwibmJmIjoxNzYxNjkzNTI1LCJleHAiOjE3NjE3MDc5MjUsImlzcyI6Iktpb3NraXRvQXBpIiwiYXVkIjoiS2lvc2tpdG9BcGlDbGllbnRzIn0.-WQhYDqDfH4pxRPPb7TbEQLxBh9_c0JjYwD9d0XC4GE
+
+{
+  "name": "Panadería Don Pedro",
+  "email": "ventas@donpedro.com.ar",
+  "phone": "+54 341 456-7890",
+  "address": "Belgrano 890, Rosario, Santa Fe, Argentina"
+}
+
+###
+
+### Create Customer 4 - Almacén La Providencia
+POST {{API_HostAddress}}/api/customers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YzBiYjk1ZS0wODIzLTQ5ZDYtOGUxNC0xMzNlNjQyNzk0ZjIiLCJ1bmlxdWVfbmFtZSI6ImFkbWluQGtpb3NraXRvLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9zZSI6IkFkbWluIiwibmJmIjoxNzYxNjkzNTI1LCJleHAiOjE3NjE3MDc5MjUsImlzcyI6Iktpb3NraXRvQXBpIiwiYXVkIjoiS2lvc2tpdG9BcGlDbGllbnRzIn0.-WQhYDqDfH4pxRPPb7TbEQLxBh9_c0JjYwD9d0XC4GE
+
+{
+  "name": "Almacén La Providencia",
+  "email": "info@laprovidencia.com",
+  "phone": "+54 261 423-5678",
+  "address": "Av. San Martín 2345, Mendoza, Argentina"
+}
+
+###
+
+### Create Customer 5 - Minimercado Familiar
+POST {{API_HostAddress}}/api/customers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YzBiYjk1ZS0wODIzLTQ5ZDYtOGUxNC0xMzNlNjQyNzk0ZjIiLCJ1bmlxdWVfbmFtZSI6ImFkbWluQGtpb3NraXRvLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9zZSI6IkFkbWluIiwibmJmIjoxNzYxNjkzNTI1LCJleHAiOjE3NjE3MDc5MjUsImlzcyI6Iktpb3NraXRvQXBpIiwiYXVkIjoiS2lvc2tpdG9BcGlDbGllbnRzIn0.-WQhYDqDfH4pxRPPb7TbEQLxBh9_c0JjYwD9d0XC4GE
+
+{
+  "name": "Minimercado Familiar",
+  "email": "minimercadofamiliar@gmail.com",
+  "phone": "+54 223 475-1234",
+  "address": "Güemes 456, Mar del Plata, Buenos Aires, Argentina"
+}
+
+###
+
+### Get all articles
+GET {{API_HostAddress}}/api/articles
+Accept: application/json
+
+###
+
+### Create Article 1 - Coca Cola 2.25L
+POST {{API_HostAddress}}/api/articles
+Content-Type: application/json
+
+{
+  "name": "Coca Cola 2.25L",
+  "description": "Gaseosa Coca Cola 2.25 litros",
+  "sku": "CC-2250",
+  "salePrice": 1500.00,
+  "consignmentPrice": 1350.00,
+  "unitCost": 1200.00,
+  "initialQuantity": 50,
+  "minStock": 10
+}
+
+###
+
+### Create Article 2 - Alfajor Jorgito Triple
+POST {{API_HostAddress}}/api/articles
+Content-Type: application/json
+
+{
+  "name": "Alfajor Jorgito Triple",
+  "description": "Alfajor de chocolate triple Jorgito",
+  "sku": "ALF-JORG-3",
+  "salePrice": 450.00,
+  "consignmentPrice": 400.00,
+  "unitCost": 350.00,
+  "initialQuantity": 100,
+  "minStock": 20
+}
+
+###
+
+### Create Article 3 - Galletitas Oreo 118g
+POST {{API_HostAddress}}/api/articles
+Content-Type: application/json
+
+{
+  "name": "Galletitas Oreo 118g",
+  "description": "Galletitas Oreo clásicas 118g",
+  "sku": "GAL-OREO-118",
+  "salePrice": 850.00,
+  "consignmentPrice": 780.00,
+  "unitCost": 700.00,
+  "initialQuantity": 75,
+  "minStock": 15
+}
+
+###
+
+### Create Article 4 - Agua Mineral Villavicencio 2L
+POST {{API_HostAddress}}/api/articles
+Content-Type: application/json
+
+{
+  "name": "Agua Mineral Villavicencio 2L",
+  "description": "Agua mineral sin gas Villavicencio 2 litros",
+  "sku": "AGUA-VILLA-2L",
+  "salePrice": 800.00,
+  "consignmentPrice": 720.00,
+  "unitCost": 650.00,
+  "initialQuantity": 60,
+  "minStock": 12
+}
+
+###
+
+### Create Article 5 - Caramelos Menthoplus x 20u
+POST {{API_HostAddress}}/api/articles
+Content-Type: application/json
+
+{
+  "name": "Caramelos Menthoplus x 20u",
+  "description": "Caramelos Menthoplus mentolados por 20 unidades",
+  "sku": "CAR-MENTH-20",
+  "salePrice": 350.00,
+  "consignmentPrice": 300.00,
+  "unitCost": 250.00,
+  "initialQuantity": 150,
+  "minStock": 30
+}
+
+###
+
+### Create Article 6 - Sin stock inicial (cantidad 0)
+POST {{API_HostAddress}}/api/articles
+Content-Type: application/json
+
+{
+  "name": "Papas Fritas Lays 150g",
+  "description": "Papas fritas Lays clásicas 150g",
+  "sku": "PAP-LAYS-150",
+  "salePrice": 950.00,
+  "consignmentPrice": 850.00,
+  "unitCost": 750.00,
+  "initialQuantity": 0,
+  "minStock": 5
+}
 
 ###

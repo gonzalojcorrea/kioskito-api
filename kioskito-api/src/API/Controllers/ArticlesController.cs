@@ -1,6 +1,7 @@
 using Application.Features.Articles.Commands.RegisterArticle;
 using Application.Features.Articles.Commands.UpdateArticle;
 using Application.Features.Articles.Commands.DeleteArticle;
+using Application.Features.Articles.Common;
 using Application.Features.Articles.Queries.GetAllArticles;
 using Application.Features.Articles.Queries.GetArticleById;
 using Domain.Entities;
@@ -16,7 +17,7 @@ namespace API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/articles")]
-[Authorize]
+//[Authorize]
 public class ArticlesController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -49,10 +50,10 @@ public class ArticlesController : ControllerBase
     [SwaggerOperation(
         Summary = "Listar artículos",
         Description = "Recupera todos los artículos." )]
-    [SwaggerResponse(200, "Lista de artículos", typeof(IReadOnlyList<Article>))]
+    [SwaggerResponse(200, "Lista de artículos", typeof(IReadOnlyList<ArticleResponse>))]
     [SwaggerResponse(401, "No autorizado", typeof(object))]
     [SwaggerResponse(500, "Error interno", typeof(object))]
-    public async Task<ActionResult<IReadOnlyList<Article>>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<ArticleResponse>>> GetAll()
     {
         var list = await _mediator.Send(new GetAllArticlesQuery());
         return Ok(list);

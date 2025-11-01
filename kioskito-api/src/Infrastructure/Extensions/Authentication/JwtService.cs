@@ -23,7 +23,20 @@ public class JwtService : IJwtService
     public JwtService(IOptions<JwtSettings> options)
     {
         _settings = options.Value;
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SecretKey));
+        
+        // Decodificar la clave desde Base64 o usar UTF8 si no es Base64
+        byte[] keyBytes;
+        try
+        {
+            keyBytes = Convert.FromBase64String(_settings.SecretKey);
+        }
+        catch
+        {
+            // Si no es Base64, usar UTF8 (debe tener al menos 32 caracteres para HS256)
+            keyBytes = Encoding.UTF8.GetBytes(_settings.SecretKey);
+        }
+        
+        var key = new SymmetricSecurityKey(keyBytes);
         _signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
     }
 

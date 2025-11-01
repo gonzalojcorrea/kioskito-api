@@ -2,6 +2,7 @@ using Application;
 using Infrastructure;
 using Infrastructure.Configurations.Filters;
 using Infrastructure.Configurations.Middleware;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -121,10 +122,10 @@ app.MapControllers();
 // -------------------------------------------------------------------------
 // 8. Migraciones automáticas (Opcional - comentar/activar según estrategia DevOps)
 // -------------------------------------------------------------------------
-// using (var scope = app.Services.CreateScope())
-// {
-//     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//     db.Database.Migrate();
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();

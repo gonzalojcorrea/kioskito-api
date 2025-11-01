@@ -1,19 +1,40 @@
 ﻿using Application.Common.Models;
+using Application.Features.Inventories.Common;
+using Application.Features.Inventories.Queries.GetAllInventories;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers;
 
 /// <summary>
-/// Controller for user authentication.
+/// Controller for inventory management.
 /// </summary>
 [ApiController]
 [Route("api/inventory")]
+[AllowAnonymous]
 public class InventoryController : ControllerBase
 {
     private readonly IMediator _mediator;
     public InventoryController(IMediator mediator) => _mediator = mediator;
+
+    /// <summary>
+    /// Obtiene todos los inventarios con información resumida.
+    /// </summary>
+    /// <returns>Listado de inventarios.</returns>
+    [HttpGet]
+    [SwaggerOperation(
+        Summary = "Listar inventarios",
+        Description = "Obtiene todos los inventarios del sistema con información resumida."
+    )]
+    [SwaggerResponse(200, "Listado de inventarios", typeof(IReadOnlyList<InventoryResponse>))]
+    [SwaggerResponse(500, "Error interno", typeof(ErrorResponse))]
+    public async Task<ActionResult<IReadOnlyList<InventoryResponse>>> GetAll()
+    {
+        var list = await _mediator.Send(new GetAllInventoriesQuery());
+        return Ok(list);
+    }
 
     /// <summary>
     /// Creates a new inventory item with the specified details.

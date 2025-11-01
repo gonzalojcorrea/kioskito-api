@@ -31,4 +31,16 @@ public class UserRepository : IUserRepository
         => await _context.Users
             .Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Email.ToUpper() == email.ToUpper(), cancellationToken);
+
+    /// <summary>
+    /// Gets all users from the database.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken cancellationToken = default)
+        => await _context.Users
+            .Include(u => u.Role)
+            .Where(u => u.DeletedAt == null)
+            .OrderBy(u => u.CreatedAt)
+            .ToListAsync(cancellationToken);
 }

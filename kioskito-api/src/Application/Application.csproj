@@ -21,11 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Inventory\Commands\" />
-    <Folder Include="Features\Inventory\Queries\GetAllItems\" />
-    <Folder Include="Features\Inventory\Queries\GetItemDetail\" />
     <Folder Include="Features\Consignment\" />
+    <Folder Include="Features\Inventory\Queries\GetAllInventories\" />
     <Folder Include="Features\Sales\" />
+    <Folder Include="Features\Users\Commands\" />
+    <Folder Include="Features\Users\Queries\GetAll\" />
   </ItemGroup>
 
 </Project>
