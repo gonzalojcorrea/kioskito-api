@@ -5,5 +5,8 @@ export interface Article {
     sku?: string;
     salePrice?: number;
     consignmentPrice?: number;
+    lastPurchasePrice: number;
+    initialQuantity: number;
+    minStock: number;
     status: boolean;
 }  

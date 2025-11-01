@@ -30,10 +30,10 @@ import { UserService } from '../../services/user.service';
 })
 export class UsersListComponent {
   columns: TableColumn[] = [
-    { field: 'name', header: 'Nombre', type: 'text' },
+    { field: 'fullName', header: 'Nombre', type: 'text' },
     { field: 'email', header: 'Email', type: 'text' },
     { field: 'role', header: 'Rol', type: 'text' },
-    { field: 'status', header: 'Estado', type: 'status' }
+    { field: 'createdAt', header: 'Fecha Creación', type: 'text' }
   ];
 
   actions: TableAction[] = [
@@ -66,11 +66,10 @@ export class UsersListComponent {
         entity: 'Usuario',
         action,
         fields: [
-          { name: 'name', label: 'Nombre', type: 'text', required: true },
-          { name: 'email', label: 'Email', type: 'text', required: true },
+          { name: 'fullName', label: 'Nombre Completo', type: 'text', required: true },
+          { name: 'email', label: 'Email', type: 'email', required: true },
           { name: 'password', label: 'Contraseña', type: 'password', required: action === 'create' },
-          { name: 'role', label: 'Rol', type: 'text', required: true },
-          { name: 'status', label: 'Activo', type: 'boolean' }
+          { name: 'role', label: 'Rol', type: 'text', required: true }
         ],
         value: user
       }
@@ -105,7 +104,7 @@ export class UsersListComponent {
           if (user) {
             const confirmed = await this.notify.confirm(
               'Eliminar usuario',
-              `¿Estás seguro de eliminar "${user.name}"?`
+              `¿Estás seguro de eliminar "${user.fullName}"?`
             );
             if (!confirmed) return;
 

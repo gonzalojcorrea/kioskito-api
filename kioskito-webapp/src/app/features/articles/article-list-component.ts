@@ -1,20 +1,26 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TableComponent, TableColumn, TableAction, ActionDefault } from '../../shared/table/table.component';
 import { ToolbarComponent } from '../../shared/toolbar/toolbar.component';
+import { InventoryService } from '../../services/inventory.service';
 import { ArticleService } from '../../services/article.service';
-import { Article } from '../../models/article.model';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Inventory } from '../../models/inventory.model';
 import { ActionModalComponent } from '../../shared/modals/action-modal-component';
-import { NotificationService } from '../../shared/notifications/notification.service'; // ✅ nuevo
+import { NotificationService } from '../../shared/notifications/notification.service';
 
 @Component({
   selector: 'app-articles-list',
   standalone: true,
-  imports: [CommonModule, TableComponent, ToolbarComponent, MatDialogModule],
+  imports: [
+    CommonModule,
+    TableComponent,
+    ToolbarComponent,
+    MatDialogModule
+  ],
   template: `
     <app-toolbar
-      title="Artículos"
+      title="Inventario"
       [showAdd]="true"
       (add)="openModal('create')">
     </app-toolbar>
@@ -24,17 +30,19 @@ import { NotificationService } from '../../shared/notifications/notification.ser
       [data]="data"
       [actions]="actions"
       [totalItems]="data.length"
-      (actionClicked)="onAction($event)">
+      (actionClicked)="onActionFromTable($event)">
     </app-table>
   `
 })
 export class ArticlesListComponent {
   columns: TableColumn[] = [
-    { field: 'name', header: 'Nombre', type: 'text' },
     { field: 'sku', header: 'SKU', type: 'text' },
-    { field: 'salePrice', header: 'Precio Venta', type: 'currency' },
-    { field: 'consignmentPrice', header: 'Precio Consignación', type: 'currency' },
-    { field: 'status', header: 'Estado', type: 'status' }
+    { field: 'articleName', header: 'Nombre Artículo', type: 'text' },
+    { field: 'lastPurchasePrice', header: 'P. Compra', type: 'currency' },
+    { field: 'salePrice', header: 'P. Venta', type: 'currency' },
+    { field: 'consignmentPrice', header: 'P. Consignación', type: 'currency' },
+    { field: 'quantity', header: 'Cantidad', type: 'number' },
+    { field: 'status', header: 'Estado Inventario', type: 'status' }
   ];
 
   actions: TableAction[] = [
@@ -43,10 +51,11 @@ export class ArticlesListComponent {
     { action: 'delete', type: ActionDefault.Delete }
   ];
 
-  data: Article[] = [];
+  data: Inventory[] = [];
 
   constructor(
-    private svc: ArticleService,
+    private inventorySvc: InventoryService,
+    private articleSvc: ArticleService,
     private dialog: MatDialog,
     private notify: NotificationService
   ) {
@@ -54,27 +63,41 @@ export class ArticlesListComponent {
   }
 
   refresh() {
-    this.svc.getAll().subscribe({
-      next: (res) => (this.data = res),
-      error: (err) => this.notify.error('Error cargando artículos')
+    this.inventorySvc.getAll().subscribe({
+      next: (res) => {
+        this.data = res;
+      },
+      error: () => this.notify.error('Error cargando inventario')
     });
   }
 
   /** 🔹 Abre modal según acción (crear, editar, eliminar o ver) */
-  openModal(action: 'create' | 'edit' | 'delete' | 'view', article?: Article) {
+  openModal(action: 'create' | 'edit' | 'delete' | 'view', inventory?: Inventory) {
     const dialogRef = this.dialog.open(ActionModalComponent, {
-      width: '420px',
+      width: '500px',
       data: {
         entity: 'Artículo',
         action,
         fields: [
           { name: 'name', label: 'Nombre', type: 'text', required: true },
+          { name: 'description', label: 'Descripción', type: 'text' },
           { name: 'sku', label: 'SKU', type: 'text' },
           { name: 'salePrice', label: 'Precio Venta', type: 'number' },
           { name: 'consignmentPrice', label: 'Precio Consignación', type: 'number' },
+          { name: 'unitCost', label: 'Costo Unitario', type: 'number', required: true },
+          { name: 'initialQuantity', label: 'Cantidad Inicial', type: 'number', required: true },
+          { name: 'minStock', label: 'Stock Mínimo', type: 'number', required: true },
           { name: 'status', label: 'Estado', type: 'boolean' }
         ],
-        value: article
+        value: inventory ? {
+          name: inventory.articleName,
+          sku: inventory.sku,
+          lastPurchasePrice: inventory.lastPurchasePrice,
+          salePrice: inventory.salePrice,
+          consignmentPrice: inventory.consignmentPrice,
+          quantity: inventory.quantity,
+          status: inventory.status === 'Activo'
+        } : undefined
       }
     });
 
@@ -83,7 +106,7 @@ export class ArticlesListComponent {
 
       switch (result.action) {
         case 'create':
-          this.svc.create(result.value).subscribe({
+          this.articleSvc.create(result.value).subscribe({
             next: () => {
               this.refresh();
               this.notify.success('Artículo creado correctamente');
@@ -93,8 +116,8 @@ export class ArticlesListComponent {
           break;
 
         case 'edit':
-          if (article)
-            this.svc.update(article.id, result.value).subscribe({
+          if (inventory)
+            this.articleSvc.update(inventory.articleId, result.value).subscribe({
               next: () => {
                 this.refresh();
                 this.notify.success('Artículo actualizado correctamente');
@@ -104,14 +127,14 @@ export class ArticlesListComponent {
           break;
 
         case 'delete':
-          if (article) {
+          if (inventory) {
             const confirmed = await this.notify.confirm(
               'Eliminar artículo',
-              `¿Estás seguro de eliminar "${article.name}"?`
+              `¿Estás seguro de eliminar "${inventory.articleName}"?`
             );
             if (!confirmed) return;
 
-            this.svc.delete(article.id).subscribe({
+            this.articleSvc.delete(inventory.articleId).subscribe({
               next: () => {
                 this.refresh();
                 this.notify.success('Artículo eliminado correctamente');
@@ -125,7 +148,7 @@ export class ArticlesListComponent {
   }
 
   /** 🔹 Interacción desde la tabla */
-  onAction(e: { action: string; row: Article }) {
-    this.openModal(e.action as any, e.row);
+  onActionFromTable(event: { action: string; row: Inventory }) {
+    this.openModal(event.action as any, event.row);
   }
 }

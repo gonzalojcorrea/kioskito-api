@@ -96,6 +96,12 @@ mat-icon {
   color: #c62828;
 }
 
+/* Stock Bar Cell */
+.mat-cell app-stock-bar {
+  display: block;
+  min-width: 180px;
+}
+
 /* Paginador */
 .mat-paginator {
   border-top: 1px solid #eee;

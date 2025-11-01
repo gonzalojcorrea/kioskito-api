@@ -25,9 +25,9 @@
           <!-- Estado (Activo/Inactivo con chip) -->
           <span *ngSwitchCase="'status'" 
                 class="status-chip"
-                [class.active]="row[col.field]"
-                [class.inactive]="!row[col.field]">
-            {{ row[col.field] ? 'Activo' : 'Inactivo' }}
+                [class.active]="row[col.field] === 'Activo' || row[col.field] === true"
+                [class.inactive]="row[col.field] === 'Inactivo' || row[col.field] === false">
+            {{ row[col.field] === true || row[col.field] === 'Activo' ? 'Activo' : 'Inactivo' }}
           </span>
 
           <!-- Fecha -->
@@ -35,6 +35,12 @@
 
           <!-- Moneda -->
           <span *ngSwitchCase="'currency'">{{ row[col.field] | currency:'' }}</span>
+
+          <!-- Barra de Stock -->
+          <app-stock-bar *ngSwitchCase="'stock-bar'"
+                         [quantity]="row[col.field]"
+                         [minStock]="row[col.minStockField || 'minStock']">
+          </app-stock-bar>
 
           <!-- Default -->
           <span *ngSwitchDefault>{{ row[col.field] }}</span>

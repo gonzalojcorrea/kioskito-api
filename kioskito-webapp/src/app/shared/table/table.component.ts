@@ -29,7 +29,7 @@ export enum ActionDefault {
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']

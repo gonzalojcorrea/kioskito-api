@@ -1,7 +1,8 @@
 export interface TableColumn {
     field: string;
     header: string;
-    type?: 'text' | 'number' | 'boolean' | 'status' | 'date' | 'currency';
+    type?: 'text' | 'number' | 'boolean' | 'status' | 'date' | 'currency' | 'stock-bar';
+    minStockField?: string; // Campo para el stock mínimo (usado en tipo 'stock-bar')
   }
 
   export interface TableAction {
