@@ -5,4 +5,5 @@ namespace Domain.Interfaces;
 
 public interface IInventoryRepository : IRepository<Inventory>
 {
+    Task<Inventory?> GetByIdWithTransactionsAsync(Guid id, CancellationToken cancellationToken = default);
 }

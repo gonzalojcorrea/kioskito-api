@@ -7,6 +7,7 @@ import { InventoryService } from '../../services/inventory.service';
 import { ArticleService } from '../../services/article.service';
 import { Inventory } from '../../models/inventory.model';
 import { ActionModalComponent } from '../../shared/modals/action-modal-component';
+import { InventoryDetailModalComponent } from './inventory-detail-modal/inventory-detail-modal.component';
 import { NotificationService } from '../../shared/notifications/notification.service';
 
 @Component({
@@ -73,6 +74,18 @@ export class ArticlesListComponent {
 
   /** 🔹 Abre modal según acción (crear, editar, eliminar o ver) */
   openModal(action: 'create' | 'edit' | 'delete' | 'view', inventory?: Inventory) {
+    // Si es acción 'ver', abrir el modal detallado
+    if (action === 'view' && inventory) {
+      this.dialog.open(InventoryDetailModalComponent, {
+        width: '900px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+        data: { inventory }
+      });
+      return;
+    }
+
+    // Para otras acciones, usar el modal genérico
     const dialogRef = this.dialog.open(ActionModalComponent, {
       width: '500px',
       data: {

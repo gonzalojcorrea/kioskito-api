@@ -1,6 +1,7 @@
 ﻿using Application.Common.Models;
 using Application.Features.Inventories.Common;
 using Application.Features.Inventories.Queries.GetAllInventories;
+using Application.Features.Inventories.Queries.GetInventoryTransactions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,25 @@ public class InventoryController : ControllerBase
     {
         var list = await _mediator.Send(new GetAllInventoriesQuery());
         return Ok(list);
+    }
+
+    /// <summary>
+    /// Obtiene todas las transacciones de un inventario específico.
+    /// </summary>
+    /// <param name="id">Identificador del inventario.</param>
+    /// <returns>Listado de transacciones del inventario.</returns>
+    [HttpGet("{id:guid}/transactions")]
+    [SwaggerOperation(
+        Summary = "Obtener transacciones de inventario",
+        Description = "Recupera todas las transacciones asociadas a un inventario específico por su identificador."
+    )]
+    [SwaggerResponse(200, "Listado de transacciones", typeof(IReadOnlyList<TransactionResponse>))]
+    [SwaggerResponse(404, "Inventario no encontrado", typeof(ErrorResponse))]
+    [SwaggerResponse(500, "Error interno", typeof(ErrorResponse))]
+    public async Task<ActionResult<IReadOnlyList<TransactionResponse>>> GetTransactions(Guid id)
+    {
+        var transactions = await _mediator.Send(new GetInventoryTransactionsQuery(id));
+        return Ok(transactions);
     }
 
     /// <summary>

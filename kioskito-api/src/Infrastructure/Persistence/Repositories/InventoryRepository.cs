@@ -15,4 +15,11 @@ public class InventoryRepository : RepositoryBase<Inventory>, IInventoryReposito
             .Include(i => i.Transactions)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+
+    public async Task<Inventory?> GetByIdWithTransactionsAsync(Guid id, CancellationToken cancellationToken = default)
+        => await _context.Inventories
+            .Include(i => i.Transactions)
+                .ThenInclude(t => t.User)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
 }

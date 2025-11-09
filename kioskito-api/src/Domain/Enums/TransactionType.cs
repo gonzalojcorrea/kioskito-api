@@ -1,10 +1,21 @@
-﻿namespace Domain.Enums;
+﻿using System.ComponentModel;
+
+namespace Domain.Enums;
 
 public enum TransactionType
 {
-    PURCHASE = 1,   // Compra (entrada de stock)
-    SALE,           // Venta (salida de stock)
-    RETURN,         // Devolución de cliente
-    ADJUSTMENT,     // Ajuste manual de stock
-    CONSIGNMENT_OUT // Salida hacia consignación
+    [Description("Compra")]
+    PURCHASE = 1,
+    
+    [Description("Venta")]
+    SALE,
+    
+    [Description("Devolución")]
+    RETURN,
+    
+    [Description("Ajuste")]
+    ADJUSTMENT,
+    
+    [Description("Salida a Consignación")]
+    CONSIGNMENT_OUT
 }
