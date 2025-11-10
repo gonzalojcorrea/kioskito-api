@@ -1,8 +1,15 @@
-﻿namespace Domain.Enums;
+﻿using System.ComponentModel;
+
+namespace Domain.Enums;
 
 public enum ConsignmentStatus
 {
-    OPEN = 1,   // Activa y en curso
-    CLOSED,     // Cerrada y liquidada
-    CANCELLED   // Cancelada
+    [Description("Abierta")]
+    OPEN = 1,
+
+    [Description("Cerrada")]
+    CLOSED,
+
+    [Description("Cancelada")]
+    CANCELLED
 }
