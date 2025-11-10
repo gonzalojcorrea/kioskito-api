@@ -1,0 +1,98 @@
+<div class="user-detail-dialog">
+  <!-- ENCABEZADO -->
+  <div class="dialog-header">
+    <h2 class="dialog-title">
+      <mat-icon class="title-icon">person</mat-icon>
+      Detalle del Usuario
+    </h2>
+    <button mat-icon-button class="close-btn" [mat-dialog-close]="true">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- CONTENIDO -->
+  <div class="dialog-content">
+    <!-- INFORMACIÓN PERSONAL -->
+    <mat-card class="detail-card">
+      <mat-card-content>
+        <div class="card-header">
+          <div class="card-title">
+            <mat-icon class="section-icon">person</mat-icon>
+            Información Personal
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label class="detail-label">Nombre Completo</label>
+            <div class="detail-value">{{ user.fullName }}</div>
+          </div>
+
+          <div class="detail-item">
+            <label class="detail-label">Email</label>
+            <div class="detail-value email-value">
+              <mat-icon class="value-icon">mail</mat-icon>
+              {{ user.email }}
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- PERMISOS -->
+    <mat-card class="detail-card">
+      <mat-card-content>
+        <div class="card-header">
+          <div class="card-title">
+            <mat-icon class="section-icon">security</mat-icon>
+            Permisos
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label class="detail-label">Rol</label>
+            <div class="detail-value">
+              <span
+                class="role-chip"
+                [style.backgroundColor]="getRoleColor(user.role) + '20'"
+                [style.color]="getRoleColor(user.role)">
+                {{ getRoleLabel(user.role) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- INFORMACIÓN DEL SISTEMA -->
+    <mat-card class="detail-card" *ngIf="user.createdAt">
+      <mat-card-content>
+        <div class="card-header">
+          <div class="card-title">
+            <mat-icon class="section-icon">info</mat-icon>
+            Información del Sistema
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-item" *ngIf="user.createdAt">
+            <label class="detail-label">Fecha de Creación</label>
+            <div class="detail-value">
+              <mat-icon class="value-icon">calendar_today</mat-icon>
+              {{ user.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- ACCIONES -->
+  <div class="dialog-actions">
+    <button mat-raised-button color="primary" [mat-dialog-close]="true">
+      <mat-icon>close</mat-icon>
+      Cerrar
+    </button>
+  </div>
+</div>

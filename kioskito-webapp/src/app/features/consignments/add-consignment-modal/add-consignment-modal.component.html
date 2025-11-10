@@ -1,0 +1,191 @@
+<div class="add-consignment-dialog">
+  <!-- Encabezado -->
+  <div class="dialog-header">
+    <h2 mat-dialog-title class="dialog-title">
+      <mat-icon class="title-icon">add_shopping_cart</mat-icon>
+      Nueva Consignación
+    </h2>
+    <button mat-icon-button class="close-btn" (click)="cancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="form">
+      <!-- Selección de Cliente -->
+      <mat-card class="section-card">
+        <mat-card-header>
+          <mat-card-title class="card-title">
+            <mat-icon class="section-icon">store</mat-icon>
+            Información del Negocio
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Seleccionar Cliente/Negocio</mat-label>
+            <mat-select formControlName="customerId" required>
+              <mat-option *ngFor="let customer of customers" [value]="customer.id">
+                {{ customer.name }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>business</mat-icon>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Artículos Disponibles -->
+      <mat-card class="section-card">
+        <mat-card-header>
+          <mat-card-title class="card-title">
+            <mat-icon class="section-icon">inventory_2</mat-icon>
+            Artículos Disponibles
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="articles-container">
+            <div *ngFor="let article of articles" class="article-item">
+              <div class="article-info">
+                <div class="article-name">
+                  <strong>{{ article.articleName }}</strong>
+                  <span class="article-sku">{{ article.sku }}</span>
+                </div>
+                <div class="article-details">
+                  <span class="detail-label">Stock:</span>
+                  <span class="detail-value">{{ article.quantity }}</span>
+                  <span class="separator">|</span>
+                  <span class="detail-label">Costo:</span>
+                  <span class="detail-value">{{ article.lastPurchasePrice | currency:'USD':'symbol':'1.2-2' }}</span>
+                </div>
+              </div>
+
+              <div class="article-inputs">
+                <mat-form-field appearance="outline" class="input-quantity">
+                  <mat-label>Cantidad</mat-label>
+                  <input matInput type="number" min="0" [max]="article.quantity" 
+                         [value]="article.selectedQuantity"
+                         (input)="updateQuantity(article, $any($event.target).value)">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="input-price">
+                  <mat-label>Precio Consignación</mat-label>
+                  <input matInput type="number" min="0" step="0.01"
+                         [value]="article.selectedPrice"
+                         (input)="updatePrice(article, $any($event.target).value)">
+                  <span matPrefix>$</span>
+                </mat-form-field>
+
+                <button mat-mini-fab color="primary" 
+                        (click)="addArticle(article)"
+                        [disabled]="article.selectedQuantity <= 0 || article.selectedQuantity > article.quantity"
+                        class="add-btn">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="articles.length === 0" class="no-articles">
+              <mat-icon>info</mat-icon>
+              <p>No hay artículos disponibles en el inventario</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Artículos Seleccionados -->
+      <mat-card class="section-card" *ngIf="selectedArticles.length > 0">
+        <mat-card-header>
+          <mat-card-title class="card-title">
+            <mat-icon class="section-icon">shopping_cart</mat-icon>
+            Artículos Seleccionados ({{ selectedArticles.length }})
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="table-container">
+            <table mat-table [dataSource]="selectedArticles" class="selected-table">
+              
+              <!-- SKU -->
+              <ng-container matColumnDef="sku">
+                <th mat-header-cell *matHeaderCellDef>SKU</th>
+                <td mat-cell *matCellDef="let article">{{ article.sku }}</td>
+              </ng-container>
+
+              <!-- Artículo -->
+              <ng-container matColumnDef="articleName">
+                <th mat-header-cell *matHeaderCellDef>Artículo</th>
+                <td mat-cell *matCellDef="let article">{{ article.articleName }}</td>
+              </ng-container>
+
+              <!-- Stock -->
+              <ng-container matColumnDef="stock">
+                <th mat-header-cell *matHeaderCellDef>Stock</th>
+                <td mat-cell *matCellDef="let article">{{ article.quantity }}</td>
+              </ng-container>
+
+              <!-- Costo -->
+              <ng-container matColumnDef="unitCost">
+                <th mat-header-cell *matHeaderCellDef class="text-right">Costo</th>
+                <td mat-cell *matCellDef="let article" class="text-right">
+                  {{ article.lastPurchasePrice | currency:'USD':'symbol':'1.2-2' }}
+                </td>
+              </ng-container>
+
+              <!-- Precio Consignación -->
+              <ng-container matColumnDef="consignmentPrice">
+                <th mat-header-cell *matHeaderCellDef class="text-right">P. Consignación</th>
+                <td mat-cell *matCellDef="let article" class="text-right">
+                  {{ article.selectedPrice | currency:'USD':'symbol':'1.2-2' }}
+                </td>
+              </ng-container>
+
+              <!-- Cantidad -->
+              <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef class="text-right">Cantidad</th>
+                <td mat-cell *matCellDef="let article" class="text-right">
+                  <strong>{{ article.selectedQuantity }}</strong>
+                </td>
+              </ng-container>
+
+              <!-- Subtotal -->
+              <ng-container matColumnDef="subtotal">
+                <th mat-header-cell *matHeaderCellDef class="text-right">Subtotal</th>
+                <td mat-cell *matCellDef="let article" class="text-right total-amount">
+                  {{ getSubtotal(article) | currency:'USD':'symbol':'1.2-2' }}
+                </td>
+              </ng-container>
+
+              <!-- Acciones -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
+                <td mat-cell *matCellDef="let article" class="text-center">
+                  <button mat-icon-button color="warn" (click)="removeArticle(article)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+
+          <div class="total-section">
+            <div class="total-label">Total:</div>
+            <div class="total-value">{{ getTotal() | currency:'USD':'symbol':'1.2-2' }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-stroked-button (click)="cancel()">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button mat-flat-button color="primary" (click)="save()" 
+            [disabled]="form.invalid || selectedArticles.length === 0">
+      <mat-icon>save</mat-icon>
+      Guardar Consignación
+    </button>
+  </mat-dialog-actions>
+</div>

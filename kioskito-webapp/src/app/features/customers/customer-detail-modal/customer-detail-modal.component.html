@@ -1,0 +1,95 @@
+<div class="customer-detail-dialog">
+  <!-- ENCABEZADO -->
+  <div class="dialog-header">
+    <h2 class="dialog-title">
+      <mat-icon class="title-icon">person</mat-icon>
+      Detalle del Cliente
+    </h2>
+    <button mat-icon-button class="close-btn" [mat-dialog-close]="true">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- CONTENIDO -->
+  <div class="dialog-content">
+    <!-- INFORMACIÓN BÁSICA -->
+    <mat-card class="detail-card">
+      <mat-card-content>
+        <div class="card-header">
+          <div class="card-title">
+            <mat-icon class="section-icon">person</mat-icon>
+            Información Básica
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label class="detail-label">Nombre</label>
+            <div class="detail-value">{{ customer.name }}</div>
+          </div>
+
+          <div class="detail-item">
+            <label class="detail-label">Email</label>
+            <div class="detail-value email-value">
+              <mat-icon class="value-icon">mail</mat-icon>
+              {{ customer.email }}
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <label class="detail-label">Estado</label>
+            <div class="detail-value">
+              <span [ngClass]="getStatusClass(customer.status)" class="status-chip">
+                {{ getStatusLabel(customer.status) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- CONTACTO -->
+    <mat-card class="detail-card">
+      <mat-card-content>
+        <div class="card-header">
+          <div class="card-title">
+            <mat-icon class="section-icon">phone</mat-icon>
+            Información de Contacto
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label class="detail-label">Teléfono</label>
+            <div class="detail-value" *ngIf="customer.phone; else noPhone">
+              <mat-icon class="value-icon">phone</mat-icon>
+              {{ customer.phone }}
+            </div>
+            <ng-template #noPhone>
+              <div class="detail-value text-muted">-</div>
+            </ng-template>
+          </div>
+
+          <div class="detail-item">
+            <label class="detail-label">Dirección</label>
+            <div class="detail-value" *ngIf="customer.address; else noAddress">
+              <mat-icon class="value-icon">location_on</mat-icon>
+              {{ customer.address }}
+            </div>
+            <ng-template #noAddress>
+              <div class="detail-value text-muted">-</div>
+            </ng-template>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- ACCIONES -->
+  <div class="dialog-actions">
+    <button mat-raised-button color="primary" [mat-dialog-close]="true">
+      <mat-icon>close</mat-icon>
+      Cerrar
+    </button>
+  </div>
+</div>

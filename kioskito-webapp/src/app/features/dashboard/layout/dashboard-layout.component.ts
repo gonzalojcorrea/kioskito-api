@@ -11,6 +11,7 @@ import { NavItem } from '../../../shared/layout/sidebar.component';
 export class DashboardLayoutComponent {
   menu: NavItem[] = [
     { label: 'Inventario', icon: 'inventory_2', path: 'articulos' },
+    { label: 'Consignaciones', icon: 'shopping_cart', path: 'consignaciones' },
     { label: 'Clientes', icon: 'groups', path: 'clientes' },
     { label: 'Usuarios', icon: 'people', path: 'usuarios' }
   ];

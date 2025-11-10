@@ -1,0 +1,86 @@
+<div class="add-customer-dialog">
+  <!-- ENCABEZADO -->
+  <div class="dialog-header">
+    <h2 class="dialog-title">
+      <mat-icon class="title-icon">person_add</mat-icon>
+      Nuevo Cliente
+    </h2>
+    <button mat-icon-button class="close-btn" (click)="cancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- CONTENIDO -->
+  <div class="dialog-content" [formGroup]="form">
+    <!-- INFORMACIÓN BÁSICA -->
+    <mat-card class="info-card">
+      <mat-card-content>
+        <div class="card-title">
+          <mat-icon class="section-icon">info</mat-icon>
+          Información Básica
+        </div>
+        <div class="form-grid">
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" placeholder="Ej: Juan Pérez" />
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="form.get('name')?.hasError('required')">
+              El nombre es requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="cliente@email.com" />
+            <mat-icon matPrefix>mail</mat-icon>
+            <mat-error *ngIf="form.get('email')?.hasError('required')">
+              El email es requerido
+            </mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">
+              Ingresa un email válido
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- CONTACTO -->
+    <mat-card class="contact-card">
+      <mat-card-content>
+        <div class="card-title">
+          <mat-icon class="section-icon">phone</mat-icon>
+          Contacto
+        </div>
+        <div class="form-grid">
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput type="tel" formControlName="phone" placeholder="Ej: (11) 1234-5678" />
+            <mat-icon matPrefix>phone</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Dirección</mat-label>
+            <input matInput formControlName="address" placeholder="Ej: Calle Principal 123" />
+            <mat-icon matPrefix>location_on</mat-icon>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- ACCIONES -->
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-raised-button color="basic" (click)="cancel()">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!isFormValid"
+      (click)="save()">
+      <mat-icon>save</mat-icon>
+      Guardar
+    </button>
+  </mat-dialog-actions>
+</div>

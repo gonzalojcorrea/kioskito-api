@@ -4,6 +4,8 @@ import { TableComponent, TableColumn, TableAction, ActionDefault } from '../../s
 import { ToolbarComponent } from '../../shared/toolbar/toolbar.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActionModalComponent } from '../../shared/modals/action-modal-component';
+import { AddUserModalComponent } from './add-user-modal/add-user-modal.component';
+import { UserDetailModalComponent } from './user-detail-modal/user-detail-modal.component';
 import { NotificationService } from '../../shared/notifications/notification.service';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
@@ -60,6 +62,41 @@ export class UsersListComponent {
   }
 
   openModal(action: 'create' | 'edit' | 'delete' | 'view', user?: User) {
+    // Si es acción 'ver', abrir el modal detallado
+    if (action === 'view' && user) {
+      this.dialog.open(UserDetailModalComponent, {
+        width: '800px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+        data: { user }
+      });
+      return;
+    }
+
+    // Si es crear usuario, usar el modal especializado
+    if (action === 'create') {
+      const dialogRef = this.dialog.open(AddUserModalComponent, {
+        width: '600px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+        disableClose: false
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (!result) return;
+
+        this.svc.create(result.value).subscribe({
+          next: () => {
+            this.refresh();
+            this.notify.success('Usuario creado correctamente');
+          },
+          error: () => this.notify.error('Error al crear el usuario')
+        });
+      });
+      return;
+    }
+
+    // Para otras acciones (edit, delete), usar el modal genérico
     const dialogRef = this.dialog.open(ActionModalComponent, {
       width: '420px',
       data: {
@@ -68,7 +105,7 @@ export class UsersListComponent {
         fields: [
           { name: 'fullName', label: 'Nombre Completo', type: 'text', required: true },
           { name: 'email', label: 'Email', type: 'email', required: true },
-          { name: 'password', label: 'Contraseña', type: 'password', required: action === 'create' },
+          { name: 'password', label: 'Contraseña', type: 'password', required: false },
           { name: 'role', label: 'Rol', type: 'text', required: true }
         ],
         value: user
@@ -79,16 +116,6 @@ export class UsersListComponent {
       if (!result) return;
 
       switch (result.action) {
-        case 'create':
-          this.svc.create(result.value).subscribe({
-            next: () => {
-              this.refresh();
-              this.notify.success('Usuario creado correctamente');
-            },
-            error: () => this.notify.error('Error al crear el usuario')
-          });
-          break;
-
         case 'edit':
           if (user)
             this.svc.update(user.id, result.value).subscribe({

@@ -25,13 +25,15 @@
           <!-- Estado (Activo/Inactivo con chip) -->
           <span *ngSwitchCase="'status'" 
                 class="status-chip"
-                [class.active]="row[col.field] === 'Activo' || row[col.field] === true"
-                [class.inactive]="row[col.field] === 'Inactivo' || row[col.field] === false">
-            {{ row[col.field] === true || row[col.field] === 'Activo' ? 'Activo' : 'Inactivo' }}
+                [class.active]="row[col.field] === 'Activo' || row[col.field] === 'Abierta' || row[col.field] === true"
+                [class.inactive]="row[col.field] === 'Inactivo' || row[col.field] === false"
+                [class.completed]="row[col.field] === 'Completada' || row[col.field] === 'Cerrada'"
+                [class.cancelled]="row[col.field] === 'Cancelada'">
+            {{ row[col.field] }}
           </span>
 
           <!-- Fecha -->
-          <span *ngSwitchCase="'date'">{{ row[col.field] | date:'dd/MM/yyyy' }}</span>
+          <span *ngSwitchCase="'date'">{{ row[col.field] ? (row[col.field] | date:'dd/MM/yyyy') : '-' }}</span>
 
           <!-- Moneda -->
           <span *ngSwitchCase="'currency'">{{ row[col.field] | currency:'' }}</span>

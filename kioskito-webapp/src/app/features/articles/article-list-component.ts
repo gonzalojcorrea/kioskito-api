@@ -8,6 +8,7 @@ import { ArticleService } from '../../services/article.service';
 import { Inventory } from '../../models/inventory.model';
 import { ActionModalComponent } from '../../shared/modals/action-modal-component';
 import { InventoryDetailModalComponent } from './inventory-detail-modal/inventory-detail-modal.component';
+import { AddArticleModalComponent } from './add-article-modal/add-article-modal.component';
 import { NotificationService } from '../../shared/notifications/notification.service';
 
 @Component({
@@ -85,7 +86,30 @@ export class ArticlesListComponent {
       return;
     }
 
-    // Para otras acciones, usar el modal genérico
+    // Si es crear artículo, usar el modal especializado
+    if (action === 'create') {
+      const dialogRef = this.dialog.open(AddArticleModalComponent, {
+        width: '600px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+        disableClose: false
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (!result) return;
+
+        this.articleSvc.create(result.value).subscribe({
+          next: () => {
+            this.refresh();
+            this.notify.success('Artículo creado correctamente');
+          },
+          error: () => this.notify.error('Error al crear el artículo')
+        });
+      });
+      return;
+    }
+
+    // Para otras acciones (edit, delete), usar el modal genérico
     const dialogRef = this.dialog.open(ActionModalComponent, {
       width: '500px',
       data: {

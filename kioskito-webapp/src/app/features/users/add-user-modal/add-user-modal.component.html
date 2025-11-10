@@ -1,0 +1,119 @@
+<div class="add-user-dialog">
+  <!-- ENCABEZADO -->
+  <div class="dialog-header">
+    <h2 class="dialog-title">
+      <mat-icon class="title-icon">person_add</mat-icon>
+      Nuevo Usuario
+    </h2>
+    <button mat-icon-button class="close-btn" (click)="cancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- CONTENIDO -->
+  <div class="dialog-content" [formGroup]="form">
+    <!-- INFORMACIÓN PERSONAL -->
+    <mat-card class="info-card">
+      <mat-card-content>
+        <div class="card-title">
+          <mat-icon class="section-icon">info</mat-icon>
+          Información Personal
+        </div>
+        <div class="form-grid">
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Nombre Completo</mat-label>
+            <input matInput formControlName="fullName" placeholder="Ej: Juan Pérez" />
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="form.get('fullName')?.hasError('required')">
+              El nombre es requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="usuario@email.com" />
+            <mat-icon matPrefix>mail</mat-icon>
+            <mat-error *ngIf="form.get('email')?.hasError('required')">
+              El email es requerido
+            </mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">
+              Ingresa un email válido
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- SEGURIDAD -->
+    <mat-card class="security-card">
+      <mat-card-content>
+        <div class="card-title">
+          <mat-icon class="section-icon">lock</mat-icon>
+          Seguridad
+        </div>
+        <div class="form-grid">
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input
+              matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              placeholder="••••••••" />
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hidePassword">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="form.get('password')?.hasError('required')">
+              La contraseña es requerida
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- PERMISOS -->
+    <mat-card class="permissions-card">
+      <mat-card-content>
+        <div class="card-title">
+          <mat-icon class="section-icon">security</mat-icon>
+          Permisos
+        </div>
+        <div class="form-grid">
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="role">
+              <mat-option *ngFor="let role of roles" [value]="role.value">
+                {{ role.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>admin_panel_settings</mat-icon>
+            <mat-error *ngIf="form.get('role')?.hasError('required')">
+              El rol es requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- ACCIONES -->
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-raised-button color="basic" (click)="cancel()">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!isFormValid"
+      (click)="save()">
+      <mat-icon>save</mat-icon>
+      Guardar
+    </button>
+  </mat-dialog-actions>
+</div>

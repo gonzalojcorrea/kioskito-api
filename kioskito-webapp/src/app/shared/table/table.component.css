@@ -96,6 +96,16 @@ mat-icon {
   color: #c62828;
 }
 
+.status-chip.completed {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.status-chip.cancelled {
+  background: #ffebee;
+  color: #c62828;
+}
+
 /* Stock Bar Cell */
 .mat-cell app-stock-bar {
   display: block;

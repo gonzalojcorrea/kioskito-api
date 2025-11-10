@@ -4,6 +4,8 @@ import { TableComponent, TableColumn, TableAction, ActionDefault } from '../../s
 import { ToolbarComponent, ToolbarAction } from '../../shared/toolbar/toolbar.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActionModalComponent } from '../../shared/modals/action-modal-component';
+import { AddCustomerModalComponent } from './add-customer-modal/add-customer-modal.component';
+import { CustomerDetailModalComponent } from './customer-detail-modal/customer-detail-modal.component';
 import { NotificationService } from '../../shared/notifications/notification.service';
 import { CustomerService } from '../../services/customer.service';
 import { Customer } from '../../models/customer.model';
@@ -69,6 +71,41 @@ export class CustomersListComponent {
   }
 
   openModal(action: 'create' | 'edit' | 'delete' | 'view', customer?: Customer) {
+    // Si es acción 'ver', abrir el modal detallado
+    if (action === 'view' && customer) {
+      this.dialog.open(CustomerDetailModalComponent, {
+        width: '800px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+        data: { customer }
+      });
+      return;
+    }
+
+    // Si es crear cliente, usar el modal especializado
+    if (action === 'create') {
+      const dialogRef = this.dialog.open(AddCustomerModalComponent, {
+        width: '600px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+        disableClose: false
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (!result) return;
+
+        this.svc.create(result.value).subscribe({
+          next: () => {
+            this.refresh();
+            this.notify.success('Cliente creado correctamente');
+          },
+          error: () => this.notify.error('Error al crear el cliente')
+        });
+      });
+      return;
+    }
+
+    // Para otras acciones (edit, delete), usar el modal genérico
     const dialogRef = this.dialog.open(ActionModalComponent, {
       width: '420px',
       data: {
