@@ -185,8 +185,9 @@ export class CustomersListComponent {
     }
 
     this.dialog.open(MapCustomersComponent, {
-      width: '80vw',
-      height: '80vh',
+      width: '95vw',
+      height: '90vh',
+      maxWidth: '1400px',
       data: this.data
     });
   }
