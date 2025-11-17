@@ -18,6 +18,7 @@ public interface IUnitOfWork : IDisposable
     ISalesOrderRepository SalesOrders { get; }
     ISalesOrderLineRepository SalesOrderLines { get; }
     ITransactionRepository Transactions { get; }
+    IConfigurationRepository Configuration { get; }
 
     /// <summary>
     /// Saves all changes made in this context to the database.

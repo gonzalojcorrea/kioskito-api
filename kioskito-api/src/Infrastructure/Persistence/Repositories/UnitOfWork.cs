@@ -21,6 +21,7 @@ public class UnitOfWork : IUnitOfWork
     public ISalesOrderRepository SalesOrders { get; }
     public ISalesOrderLineRepository SalesOrderLines { get; }
     public ITransactionRepository Transactions { get; }
+    public IConfigurationRepository Configuration { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class with the specified context.
@@ -40,6 +41,7 @@ public class UnitOfWork : IUnitOfWork
         SalesOrders = new SalesOrderRepository(_context);
         SalesOrderLines = new SalesOrderLineRepository(_context);
         Transactions = new TransactionRepository(_context);
+        Configuration = new ConfigurationRepository(_context);
     }
 
     /// <summary>

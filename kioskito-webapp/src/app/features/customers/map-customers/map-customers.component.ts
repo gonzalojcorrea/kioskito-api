@@ -16,7 +16,7 @@ import { ConfigService } from '../../../services/configuration.service';
   styleUrls: ['./map-customers.component.css']
 })
 export class MapCustomersComponent implements OnInit {
-  center: google.maps.LatLngLiteral = { lat: -34.6037, lng: -58.3816 };
+  center: google.maps.LatLngLiteral = { lat: -31.4201, lng: -64.1888 };
   zoom = 11;
   markers: any[] = [];
   originAddress: string | null = null;
@@ -29,49 +29,59 @@ export class MapCustomersComponent implements OnInit {
     private dialogRef: MatDialogRef<MapCustomersComponent>
   ) {}
 
-  ngOnInit() {
-    // 🟢 obtener la dirección de la central
-    this.configService.getConfig().subscribe({
-      next: (config) => {
-        this.originAddress = config.address;
+ngOnInit() {
 
-        // 🟢 convertir dirección en coordenadas y agregar marcador
-        this.geo.geocodeAddress(config.address).subscribe(coords => {
+  this.configService.getConfig().subscribe({
+    next: (config) => {
+      console.log("🟢 Config recibida:", config);
+
+      this.originAddress = config.data.address;
+
+      if (this.originAddress) {
+        this.geo.geocodeAddress(this.originAddress).subscribe(coords => {
           if (coords) {
             this.centralMarker = {
               position: coords,
-              label: { text: 'Central', color: '#1a3d66', fontWeight: 'bold', fontSize: '13px' },
-              title: config.companyName,
+              label: {
+                text: 'Central',
+                color: '#1a3d66',
+                fontWeight: 'bold',
+                fontSize: '13px'
+              },
+              title: config.data.companyName,
               icon: {
                 url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
                 scaledSize: new google.maps.Size(40, 40)
               }
             };
 
-            // si no hay otros marcadores, centrar en la central
-            if (this.markers.length === 0) this.center = coords;
-          }
-        });
-      },
-      error: (err) => console.error('Error cargando configuración', err)
-    });
-
-    // 🔹 Cargar coordenadas de clientes
-    this.data.forEach(c => {
-      if (c.address) {
-        this.geo.geocodeAddress(c.address).subscribe(coords => {
-          if (coords) {
-            this.markers.push({
-              position: coords,
-              label: { text: c.name, color: '#0f2b4c', fontWeight: '500', fontSize: '12px' },
-              title: c.name
-            });
-            if (this.markers.length === 1 && !this.centralMarker) this.center = coords;
+            this.center = coords;
           }
         });
       }
-    });
-  }
+    },
+    error: (err) => console.error('Error cargando configuración', err)
+  });
+
+  // Marcadores de clientes
+  this.data.forEach(c => {
+    if (c.address) {
+      this.geo.geocodeAddress(c.address).subscribe(coords => {
+        if (coords) {
+          this.markers.push({
+            position: coords,
+            label: { text: c.name, color: '#0f2b4c', fontWeight: '500', fontSize: '12px' },
+            title: c.name
+          });
+
+          if (this.markers.length === 1 && !this.centralMarker) {
+            this.center = coords;
+          }
+        }
+      });
+    }
+  });
+}
 
   zoomToMarker(marker: any) {
     this.center = marker.position;

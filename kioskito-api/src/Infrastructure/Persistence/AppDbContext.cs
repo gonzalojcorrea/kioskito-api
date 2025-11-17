@@ -22,6 +22,7 @@ public class AppDbContext : DbContext
     public DbSet<Customer> Customers { get; set; }
     public DbSet<SalesOrder> SalesOrders { get; set; }
     public DbSet<SalesOrderLine> SalesOrderLines { get; set; }
+    public DbSet<Configuration> Configurations { get; set; }
 
     /// <summary>
     /// Configures the model for the context.
