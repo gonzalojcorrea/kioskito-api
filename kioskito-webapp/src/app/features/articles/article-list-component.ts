@@ -6,9 +6,10 @@ import { ToolbarComponent } from '../../shared/toolbar/toolbar.component';
 import { InventoryService } from '../../services/inventory.service';
 import { ArticleService } from '../../services/article.service';
 import { Inventory } from '../../models/inventory.model';
-import { ActionModalComponent } from '../../shared/modals/action-modal-component';
 import { InventoryDetailModalComponent } from './inventory-detail-modal/inventory-detail-modal.component';
 import { AddArticleModalComponent } from './add-article-modal/add-article-modal.component';
+import { EditArticleModalComponent } from './edit-article-modal/edit-article-modal.component';
+import { DeleteArticleModalComponent } from './delete-article-modal/delete-article-modal.component';
 import { NotificationService } from '../../shared/notifications/notification.service';
 
 @Component({
@@ -29,10 +30,12 @@ import { NotificationService } from '../../shared/notifications/notification.ser
 
     <app-table
       [columns]="columns"
-      [data]="data"
+      [data]="pagedData"
       [actions]="actions"
       [totalItems]="data.length"
-      (actionClicked)="onActionFromTable($event)">
+      [pageSize]="pageSize"
+      (actionClicked)="onActionFromTable($event)"
+      (pageChanged)="onPageChanged($event)">
     </app-table>
   `
 })
@@ -54,6 +57,9 @@ export class ArticlesListComponent {
   ];
 
   data: Inventory[] = [];
+  pagedData: Inventory[] = [];
+  pageSize = 10;
+  pageIndex = 0;
 
   constructor(
     private inventorySvc: InventoryService,
@@ -68,9 +74,24 @@ export class ArticlesListComponent {
     this.inventorySvc.getAll().subscribe({
       next: (res) => {
         this.data = res;
+        this.updatePagedData();
       },
       error: () => this.notify.error('Error cargando inventario')
     });
+  }
+
+  /** Actualiza los datos paginados según el índice y tamaño de página */
+  updatePagedData() {
+    const start = this.pageIndex * this.pageSize;
+    const end = start + this.pageSize;
+    this.pagedData = this.data.slice(start, end);
+  }
+
+  /** Maneja el cambio de página/tamaño desde el paginador */
+  onPageChanged(event: { pageIndex: number, pageSize: number }) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePagedData();
   }
 
   /** 🔹 Abre modal según acción (crear, editar, eliminar o ver) */
@@ -89,7 +110,7 @@ export class ArticlesListComponent {
     // Si es crear artículo, usar el modal especializado
     if (action === 'create') {
       const dialogRef = this.dialog.open(AddArticleModalComponent, {
-        width: '600px',
+        width: '700px',
         maxWidth: '95vw',
         maxHeight: '90vh',
         disableClose: false
@@ -109,79 +130,61 @@ export class ArticlesListComponent {
       return;
     }
 
-    // Para otras acciones (edit, delete), usar el modal genérico
-    const dialogRef = this.dialog.open(ActionModalComponent, {
-      width: '500px',
-      data: {
-        entity: 'Artículo',
-        action,
-        fields: [
-          { name: 'name', label: 'Nombre', type: 'text', required: true },
-          { name: 'description', label: 'Descripción', type: 'text' },
-          { name: 'sku', label: 'SKU', type: 'text' },
-          { name: 'salePrice', label: 'Precio Venta', type: 'number' },
-          { name: 'consignmentPrice', label: 'Precio Consignación', type: 'number' },
-          { name: 'unitCost', label: 'Costo Unitario', type: 'number', required: true },
-          { name: 'initialQuantity', label: 'Cantidad Inicial', type: 'number', required: true },
-          { name: 'minStock', label: 'Stock Mínimo', type: 'number', required: true },
-          { name: 'status', label: 'Estado', type: 'boolean' }
-        ],
-        value: inventory ? {
-          name: inventory.articleName,
-          sku: inventory.sku,
-          lastPurchasePrice: inventory.lastPurchasePrice,
-          salePrice: inventory.salePrice,
-          consignmentPrice: inventory.consignmentPrice,
-          quantity: inventory.quantity,
-          status: inventory.status === 'Activo'
-        } : undefined
-      }
-    });
+    // Si es editar artículo, usar el modal de edición
+    if (action === 'edit' && inventory) {
+      const dialogRef = this.dialog.open(EditArticleModalComponent, {
+        width: '700px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+        disableClose: false,
+        data: { inventory }
+      });
 
-    dialogRef.afterClosed().subscribe(async (result) => {
-      if (!result) return;
+      dialogRef.afterClosed().subscribe((result) => {
+        if (!result) return;
 
-      switch (result.action) {
-        case 'create':
-          this.articleSvc.create(result.value).subscribe({
-            next: () => {
-              this.refresh();
-              this.notify.success('Artículo creado correctamente');
-            },
-            error: () => this.notify.error('Error al crear el artículo')
-          });
-          break;
+        const updateData = {
+          id: inventory.articleId,
+          name: result.value.name,
+          description: result.value.description || '',
+          sku: result.value.sku || '',
+          salePrice: result.value.salePrice,
+          consignmentPrice: result.value.consignmentPrice || 0
+        };
 
-        case 'edit':
-          if (inventory)
-            this.articleSvc.update(inventory.articleId, result.value).subscribe({
-              next: () => {
-                this.refresh();
-                this.notify.success('Artículo actualizado correctamente');
-              },
-              error: () => this.notify.error('Error al actualizar el artículo')
-            });
-          break;
+        this.articleSvc.update(inventory.articleId, updateData as any).subscribe({
+          next: () => {
+            this.refresh();
+            this.notify.success('Artículo actualizado correctamente');
+          },
+          error: () => this.notify.error('Error al actualizar el artículo')
+        });
+      });
+      return;
+    }
 
-        case 'delete':
-          if (inventory) {
-            const confirmed = await this.notify.confirm(
-              'Eliminar artículo',
-              `¿Estás seguro de eliminar "${inventory.articleName}"?`
-            );
-            if (!confirmed) return;
+    // Si es eliminar artículo, usar el modal de confirmación
+    if (action === 'delete' && inventory) {
+      const dialogRef = this.dialog.open(DeleteArticleModalComponent, {
+        width: '500px',
+        maxWidth: '95vw',
+        disableClose: false,
+        data: { inventory }
+      });
 
-            this.articleSvc.delete(inventory.articleId).subscribe({
-              next: () => {
-                this.refresh();
-                this.notify.success('Artículo eliminado correctamente');
-              },
-              error: () => this.notify.error('Error al eliminar el artículo')
-            });
-          }
-          break;
-      }
-    });
+      dialogRef.afterClosed().subscribe((confirmed) => {
+        if (!confirmed) return;
+
+        this.articleSvc.delete(inventory.articleId).subscribe({
+          next: () => {
+            this.refresh();
+            this.notify.success('Artículo eliminado correctamente');
+          },
+          error: () => this.notify.error('Error al eliminar el artículo')
+        });
+      });
+      return;
+    }
   }
 
   /** 🔹 Interacción desde la tabla */

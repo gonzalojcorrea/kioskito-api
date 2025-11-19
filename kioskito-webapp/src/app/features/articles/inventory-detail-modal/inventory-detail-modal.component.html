@@ -1,7 +1,7 @@
 <div class="inventory-detail-dialog">
   <!-- Encabezado -->
   <div class="dialog-header">
-    <h2 mat-dialog-title class="dialog-title">
+    <h2 class="dialog-title">
       <mat-icon class="title-icon">inventory_2</mat-icon>
       Detalle de Inventario
     </h2>
@@ -14,20 +14,25 @@
     <!-- Sección de información general -->
     <mat-card class="info-card">
       <mat-card-header>
-        <mat-card-title class="card-title">
-          <mat-icon class="section-icon">info</mat-icon>
+        <mat-card-title>
+          <mat-icon class="card-icon">info</mat-icon>
           Información General
         </mat-card-title>
       </mat-card-header>
+      <mat-divider></mat-divider>
       <mat-card-content>
         <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Artículo:</span>
+            <span class="info-value">{{ data.inventory.articleName }}</span>
+          </div>
           <div class="info-item">
             <span class="info-label">SKU:</span>
             <span class="info-value">{{ data.inventory.sku || 'N/A' }}</span>
           </div>
-          <div class="info-item">
-            <span class="info-label">Artículo:</span>
-            <span class="info-value">{{ data.inventory.articleName }}</span>
+          <div class="info-item full-width" *ngIf="description">
+            <span class="info-label">Descripción:</span>
+            <span class="info-value">{{ description }}</span>
           </div>
           <div class="info-item">
             <span class="info-label">Cantidad en Stock:</span>
@@ -153,10 +158,10 @@
     </mat-card>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end" class="dialog-actions">
-    <button mat-flat-button color="primary" (click)="close()">
+  <div class="dialog-actions">
+    <button mat-raised-button (click)="close()" class="btn-close">
       <mat-icon>check</mat-icon>
       Cerrar
     </button>
-  </mat-dialog-actions>
+  </div>
 </div>

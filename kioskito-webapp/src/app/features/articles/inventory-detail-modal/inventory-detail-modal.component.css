@@ -50,23 +50,30 @@
 .transactions-card {
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.card-title {
+.info-card mat-card-header,
+.transactions-card mat-card-header {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 12px 16px;
+}
+
+.info-card mat-card-title,
+.transactions-card mat-card-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #333;
+  margin: 0;
 }
 
-.section-icon {
+.card-icon {
+  font-size: 22px;
   color: #667eea;
-  font-size: 24px;
-  width: 24px;
-  height: 24px;
 }
 
 /* ===== INFORMACIÓN GENERAL ===== */
@@ -81,6 +88,10 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.info-item.full-width {
+  grid-column: 1 / -1;
 }
 
 .info-label {
@@ -266,18 +277,23 @@
 
 /* ===== ACCIONES ===== */
 .dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
   padding: 16px 24px;
   border-top: 1px solid #e0e0e0;
-  background-color: #fafafa;
+  background-color: #f9f9f9;
 }
 
-.dialog-actions button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 24px;
-  font-size: 14px;
-  font-weight: 600;
+.btn-close {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 500;
+}
+
+.btn-close:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #663a8f 100%);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 /* ===== RESPONSIVE ===== */

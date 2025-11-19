@@ -30,6 +30,7 @@ import { InventoryService } from '../../../services/inventory.service';
 export class InventoryDetailModalComponent implements OnInit {
   transactions: Transaction[] = [];
   loading = true;
+  description = '';
   displayedColumns: string[] = ['date', 'transactionType', 'quantity', 'unitCost', 'totalAmount', 'userName', 'note'];
 
   constructor(
@@ -40,6 +41,8 @@ export class InventoryDetailModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTransactions();
+    // Aquí podrías cargar la descripción desde el servicio si está disponible
+    this.description = ''; // Por ahora vacío, se puede cargar del backend
   }
 
   loadTransactions(): void {

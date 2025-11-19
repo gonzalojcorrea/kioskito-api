@@ -1,0 +1,56 @@
+<div class="delete-article-dialog">
+  <!-- Encabezado -->
+  <div class="dialog-header">
+    <h2 class="dialog-title">
+      <mat-icon class="title-icon">delete_forever</mat-icon>
+      Eliminar Artículo
+    </h2>
+    <button mat-icon-button (click)="cancel()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Contenido -->
+  <mat-dialog-content class="dialog-content">
+    <div class="warning-container">
+      <mat-icon class="warning-icon">warning</mat-icon>
+      <div class="warning-text">
+        <h3>¿Estás seguro de eliminar este artículo?</h3>
+        <p class="warning-message">
+          Esta acción no se puede deshacer. El artículo será eliminado permanentemente del inventario.
+        </p>
+      </div>
+    </div>
+
+    <div class="article-info">
+      <div class="info-row">
+        <span class="label">Artículo:</span>
+        <span class="value">{{ data.inventory.articleName }}</span>
+      </div>
+      <div class="info-row" *ngIf="data.inventory.sku">
+        <span class="label">SKU:</span>
+        <span class="value">{{ data.inventory.sku }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Cantidad en stock:</span>
+        <span class="value">{{ data.inventory.quantity }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Precio de venta:</span>
+        <span class="value">{{ data.inventory.salePrice | currency }}</span>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Acciones -->
+  <div class="dialog-actions">
+    <button mat-button (click)="cancel()" class="btn-cancel">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button mat-raised-button (click)="confirm()" class="btn-delete">
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+  </div>
+</div>
