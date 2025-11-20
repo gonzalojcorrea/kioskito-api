@@ -1,0 +1,223 @@
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.search-filter-container {
+  display: flex;
+  flex-direction: column; /* layout vertical */
+  gap: 4px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e9edf2 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #d1d8e1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* textura sutil decorativa */
+.search-filter-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 85% 15%, rgba(102,126,234,0.12), transparent 60%);
+  pointer-events: none;
+  opacity: .45; /* menor intensidad para visual más ligera */
+}
+
+/* ===== WRAPPER BUSQUEDA Y ACCIONES ===== */
+.search-and-actions-wrapper {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* Campo de búsqueda */
+/* ===== BUSCADOR ===== */
+.search-wrapper {
+  flex: 0 0 45%;
+  min-width: 0;
+}
+
+.search-field {
+  flex: 1;
+  min-width: 100%;
+  max-width: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.mat-mdc-form-field{
+    align-items: center;
+}
+
+/* Remueve espacio inferior estándar */
+.search-field .mat-mdc-form-field-wrapper {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* Compacta el wrapper de Material */
+.search-field .mat-mdc-text-field-wrapper {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 36px;
+}
+
+/* Elimina completamente subscript / hints */
+.search-field .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  position: absolute !important;
+}
+
+/* Sin spacer */
+.search-field .mat-mdc-form-field-hint-spacer { display: none !important; }
+
+.search-field .mat-mdc-form-field-bottom-align {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Icono prefix */
+.search-field mat-icon[matPrefix] {
+  color: #1a3d66;
+  margin-right: 8px;
+  opacity: .85;
+}
+
+/* Input */
+.search-field input {
+  font-size: 14px;
+  line-height: 36px;
+  height: 36px;
+  padding: 0 4px;
+}
+
+/* Estado focus accesible */
+.search-field .mdc-text-field--focused:not(.mdc-text-field--disabled) {
+  box-shadow: 0 0 0 2px rgba(102,126,234,0.35);
+  border-radius: 8px;
+}
+
+/* ===== SLOT DE ACCIONES ===== */
+.actions-slot {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 44px;
+}
+
+/* Botones dentro del slot de acciones */
+.actions-slot button {
+  margin: 0 !important;
+}
+
+.actions-slot button + button {
+  margin-left: 10px !important;
+}
+
+/* Contenedor de filtros */
+/* ===== FILTROS ===== */
+.filters-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 2px 0;
+  overflow: hidden; /* oculta cualquier scrollbar accidental */
+}
+/* Eliminamos estilos de scrollbar para no mostrar barra lateral */
+
+/* Botones de filtro */
+/* Botón filtro base */
+.filter-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 14px;
+  height: 34px; /* reducida desde 40 */
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  border-radius: 18px;
+  border: 1px solid #c5ced8;
+  background: #ffffff;
+  color: #434c55;
+  transition: background .2s ease, box-shadow .2s ease, color .2s ease, border-color .2s ease;
+  text-transform: none;
+  white-space: nowrap;
+  position: relative;
+}
+
+/* Icono dentro del botón */
+.filter-button mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  opacity: .85;
+}
+
+/* Hover */
+.filter-button:hover {
+  background: #f0f3f6;
+  border-color: #9ca9b9;
+  color: #1a3d66;
+}
+
+/* Activo */
+.filter-button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-color: #667eea;
+  box-shadow: 0 3px 10px -3px rgba(102,126,234,.45);
+}
+
+/* Icono activo */
+.filter-button.active mat-icon { color: #fff; }
+
+/* Focus visible accesible */
+.filter-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102,126,234,.4);
+  border-color: #667eea;
+}
+
+/* Estado disabled (por futura extensión) */
+.filter-button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  filter: grayscale(.3);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .search-filter-container { padding: 12px 14px; gap: 6px; }
+  .search-and-actions-wrapper { flex-wrap: wrap; }
+  .search-wrapper { flex: 1 1 100%; }
+  .actions-slot { flex: 1 1 100%; justify-content: flex-start; }
+}
+
+@media (max-width: 600px) {
+  .filter-button { padding: 4px 12px; height: 32px; }
+  .filters-container { gap: 8px; }
+  .search-and-actions-wrapper { gap: 8px; }
+}
+
+/* Modo oscuro opcional por clase */
+.dark-theme .search-filter-container {
+  background: linear-gradient(135deg,#1f2933,#2d3a48);
+  border-color: #3d4b58;
+}
+.dark-theme .filter-button { background:#2d3a48; border-color:#3d4b58; color:#d1d9e0; }
+.dark-theme .filter-button:hover { background:#3a4856; border-color:#607a96; color:#fff; }
+.dark-theme .filter-button.active { box-shadow: 0 4px 14px -4px rgba(102,126,234,.55); }

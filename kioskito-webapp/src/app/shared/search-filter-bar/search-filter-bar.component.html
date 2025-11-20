@@ -1,0 +1,46 @@
+<div class="search-filter-container">
+  <div class="search-and-actions-wrapper">
+    <!-- Barra de búsqueda -->
+    <div class="search-wrapper">
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ placeholder }}</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchText"
+          (ngModelChange)="onSearchChange()"
+          type="text"
+        />
+        <mat-icon matPrefix>search</mat-icon>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="searchText"
+          (click)="clearSearch()"
+          type="button"
+        >
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <!-- Acciones/Botones a la derecha -->
+    <div class="actions-slot">
+      <ng-content select="[appSearchActions]"></ng-content>
+    </div>
+  </div>
+
+  <!-- Filtros predeterminados -->
+  <div class="filters-container" *ngIf="filters.length > 0">
+    <button
+      mat-stroked-button
+      *ngFor="let filter of filters"
+      [class.active]="isFilterActive(filter.value)"
+      [color]="isFilterActive(filter.value) ? (filter.color || 'primary') : undefined"
+      (click)="onFilterClick(filter.value)"
+      class="filter-button"
+    >
+      <mat-icon *ngIf="filter.icon">{{ filter.icon }}</mat-icon>
+      {{ filter.label }}
+    </button>
+  </div>
+</div>

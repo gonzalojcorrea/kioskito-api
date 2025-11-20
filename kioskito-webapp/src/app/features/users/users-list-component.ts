@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { TableComponent, TableColumn, TableAction, ActionDefault } from '../../shared/table/table.component';
-import { ToolbarComponent } from '../../shared/toolbar/toolbar.component';
+import { SearchFilterBarComponent, FilterOption } from '../../shared/search-filter-bar/search-filter-bar.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActionModalComponent } from '../../shared/modals/action-modal-component';
 import { AddUserModalComponent } from './add-user-modal/add-user-modal.component';
@@ -13,20 +15,28 @@ import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-users-list',
   standalone: true,
-  imports: [CommonModule, TableComponent, ToolbarComponent, MatDialogModule],
+  imports: [CommonModule, TableComponent, SearchFilterBarComponent, MatDialogModule, MatButtonModule, MatIconModule],
   template: `
-    <app-toolbar
-      title="Usuarios"
-      [showAdd]="true"
-      (add)="openModal('create')">
-    </app-toolbar>
+    <app-search-filter-bar
+      placeholder="Buscar por nombre, email o rol..."
+      [filters]="filters"
+      (searchChanged)="onSearchChanged($event)"
+      (filterSelected)="onFilterSelected($event)">
+      <div appSearchActions>
+        <button mat-raised-button color="primary" (click)="openModal('create')">
+          <mat-icon>add</mat-icon> Nuevo Registro
+        </button>
+      </div>
+    </app-search-filter-bar>
 
     <app-table
       [columns]="columns"
-      [data]="data"
+      [data]="pagedData"
       [actions]="actions"
-      [totalItems]="data.length"
-      (actionClicked)="onAction($event)">
+      [totalItems]="filteredData.length"
+      [pageSize]="pageSize"
+      (actionClicked)="onAction($event)"
+      (pageChanged)="onPageChanged($event)">
     </app-table>
   `
 })
@@ -44,7 +54,20 @@ export class UsersListComponent {
     { action: 'delete', type: ActionDefault.Delete }
   ];
 
+  filters: FilterOption[] = [
+    { label: 'Administradores', value: 'admin', icon: 'admin_panel_settings', color: 'warn' },
+    { label: 'Empleados', value: 'employee', icon: 'badge', color: 'primary' },
+    { label: 'Vendedores', value: 'seller', icon: 'shopping_cart', color: 'accent' },
+    { label: 'Supervisores', value: 'supervisor', icon: 'supervised_user_circle', color: 'primary' }
+  ];
+
   data: User[] = [];
+  filteredData: User[] = [];
+  pagedData: User[] = [];
+  pageSize = 10;
+  pageIndex = 0;
+  searchText = '';
+  activeFilter = '';
 
   constructor(
     private svc: UserService,
@@ -56,9 +79,59 @@ export class UsersListComponent {
 
   refresh() {
     this.svc.getAll().subscribe({
-      next: (res) => (this.data = res),
+      next: (res) => {
+        this.data = res;
+        this.applyFilters();
+      },
       error: () => this.notify.error('Error cargando usuarios')
     });
+  }
+
+  applyFilters() {
+    let result = [...this.data];
+
+    // Aplicar búsqueda por texto
+    if (this.searchText) {
+      const search = this.searchText.toLowerCase();
+      result = result.filter(item =>
+        item.fullName?.toLowerCase().includes(search) ||
+        item.email?.toLowerCase().includes(search) ||
+        item.role?.toLowerCase().includes(search)
+      );
+    }
+
+    // Aplicar filtro predeterminado
+    if (this.activeFilter) {
+      result = result.filter(item =>
+        item.role?.toLowerCase() === this.activeFilter.toLowerCase()
+      );
+    }
+
+    this.filteredData = result;
+    this.pageIndex = 0;
+    this.updatePagedData();
+  }
+
+  onSearchChanged(searchText: string) {
+    this.searchText = searchText;
+    this.applyFilters();
+  }
+
+  onFilterSelected(filterValue: string) {
+    this.activeFilter = filterValue;
+    this.applyFilters();
+  }
+
+  updatePagedData() {
+    const start = this.pageIndex * this.pageSize;
+    const end = start + this.pageSize;
+    this.pagedData = this.filteredData.slice(start, end);
+  }
+
+  onPageChanged(event: { pageIndex: number, pageSize: number }) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePagedData();
   }
 
   openModal(action: 'create' | 'edit' | 'delete' | 'view', user?: User) {

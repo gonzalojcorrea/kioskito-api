@@ -1,30 +1,43 @@
 .table-container {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  margin-top: 16px;
-  border: 1px solid #e0e0e0; /* 🔹 cierra visualmente la tabla */
+  margin-top: 20px;
+  border: 1px solid #e8edf2;
+  transition: box-shadow 0.3s ease;
+}
+
+.table-container:hover {
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.12);
 }
 
 /* Header */
 .mat-header-cell {
-  background: #f8f9fb;
-  color: #1a3d66;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
   font-weight: 600;
-  font-size: 14px;
-  padding: 12px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 16px 12px;
   text-align: left;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: none;
   user-select: none;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mat-header-cell:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #6941a0 100%);
 }
 
 .sort-icon {
   font-size: 18px;
   vertical-align: middle;
   margin-left: 6px;
-  opacity: 0.6;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
 }
 
 .mat-header-cell:hover .sort-icon {
@@ -33,23 +46,31 @@
 
 /* Filas */
 .mat-row {
-  transition: background 0.2s ease-in-out;
-  border-bottom: 1px solid #eee;
+  transition: all 0.25s ease;
+  border-bottom: 1px solid #f0f2f5;
+  background: #ffffff;
+}
+
+.mat-row:nth-child(even) {
+  background: #fafbfc;
 }
 
 .mat-row:last-child {
-  border-bottom: 1px solid #ddd; /* 🔹 cierre final visible */
+  border-bottom: none;
 }
 
 .mat-row:hover {
-  background: rgba(26, 61, 102, 0.05);
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 /* Celdas */
 .mat-cell {
   font-size: 14px;
-  padding: 12px;
-  color: #333;
+  padding: 14px 12px;
+  color: #2d3748;
+  font-weight: 400;
 }
 
 /* Acciones */
@@ -59,51 +80,67 @@ td.mat-cell:last-child {
 
 td.mat-cell:last-child button {
   margin: 0 4px;
-  border-radius: 50%;
-  background: #f4f6fa;
-  transition: background 0.2s ease;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f4f6fa 0%, #e8ecf1 100%);
+  transition: all 0.3s ease;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #d0d7de;
 }
 
 td.mat-cell:last-child button:hover {
-  background: #1a3d66;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  border-color: transparent;
 }
 
 td.mat-cell:last-child button:hover mat-icon {
   color: #fff;
+  transform: scale(1.1);
 }
 
 mat-icon {
   font-size: 20px;
-  color: #1a3d66;
+  color: #4a5568;
+  transition: all 0.3s ease;
 }
 
 /* Chips de estado */
 .status-chip {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.status-chip:hover {
+  transform: scale(1.05);
 }
 
 .status-chip.active {
-  background: #e0f7e9;
-  color: #2e7d32;
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: #ffffff;
 }
 
 .status-chip.inactive {
-  background: #fdecea;
-  color: #c62828;
+  background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+  color: #ffffff;
 }
 
 .status-chip.completed {
-  background: #e3f2fd;
-  color: #1565c0;
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  color: #ffffff;
 }
 
 .status-chip.cancelled {
-  background: #ffebee;
-  color: #c62828;
+  background: linear-gradient(135deg, #f687b3 0%, #ed64a6 100%);
+  color: #ffffff;
 }
 
 /* Stock Bar Cell */
@@ -114,7 +151,9 @@ mat-icon {
 
 /* Paginador */
 .mat-paginator {
-  border-top: 1px solid #eee;
-  padding: 8px;
-  background: #fafafa;
+  border-top: 1px solid #e8edf2;
+  padding: 12px;
+  background: linear-gradient(135deg, #fafbfc 0%, #f4f6f8 100%);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }

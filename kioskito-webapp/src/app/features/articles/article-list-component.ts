@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { TableComponent, TableColumn, TableAction, ActionDefault } from '../../shared/table/table.component';
-import { ToolbarComponent } from '../../shared/toolbar/toolbar.component';
+import { SearchFilterBarComponent, FilterOption } from '../../shared/search-filter-bar/search-filter-bar.component';
 import { InventoryService } from '../../services/inventory.service';
 import { ArticleService } from '../../services/article.service';
 import { Inventory } from '../../models/inventory.model';
@@ -18,21 +20,29 @@ import { NotificationService } from '../../shared/notifications/notification.ser
   imports: [
     CommonModule,
     TableComponent,
-    ToolbarComponent,
-    MatDialogModule
+    SearchFilterBarComponent,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule
   ],
   template: `
-    <app-toolbar
-      title="Inventario"
-      [showAdd]="true"
-      (add)="openModal('create')">
-    </app-toolbar>
+    <app-search-filter-bar
+      placeholder="Buscar por nombre, SKU o código..."
+      [filters]="filters"
+      (searchChanged)="onSearchChanged($event)"
+      (filterSelected)="onFilterSelected($event)">
+      <div appSearchActions>
+        <button mat-raised-button color="primary" (click)="openModal('create')">
+          <mat-icon>add</mat-icon> Nuevo Registro
+        </button>
+      </div>
+    </app-search-filter-bar>
 
     <app-table
       [columns]="columns"
       [data]="pagedData"
       [actions]="actions"
-      [totalItems]="data.length"
+      [totalItems]="filteredData.length"
       [pageSize]="pageSize"
       (actionClicked)="onActionFromTable($event)"
       (pageChanged)="onPageChanged($event)">
@@ -56,10 +66,20 @@ export class ArticlesListComponent {
     { action: 'delete', type: ActionDefault.Delete }
   ];
 
+  filters: FilterOption[] = [
+    { label: 'Stock Bajo', value: 'low-stock', icon: 'warning', color: 'warn' },
+    { label: 'Precio Alto', value: 'high-price', icon: 'trending_up', color: 'accent' },
+    { label: 'Sin Stock', value: 'no-stock', icon: 'remove_circle', color: 'warn' },
+    { label: 'Disponible', value: 'available', icon: 'check_circle', color: 'primary' }
+  ];
+
   data: Inventory[] = [];
+  filteredData: Inventory[] = [];
   pagedData: Inventory[] = [];
   pageSize = 10;
   pageIndex = 0;
+  searchText = '';
+  activeFilter = '';
 
   constructor(
     private inventorySvc: InventoryService,
@@ -74,17 +94,63 @@ export class ArticlesListComponent {
     this.inventorySvc.getAll().subscribe({
       next: (res) => {
         this.data = res;
-        this.updatePagedData();
+        this.applyFilters();
       },
       error: () => this.notify.error('Error cargando inventario')
     });
+  }
+
+  /** Aplica búsqueda y filtros */
+  applyFilters() {
+    let result = [...this.data];
+
+    // Aplicar búsqueda por texto
+    if (this.searchText) {
+      const search = this.searchText.toLowerCase();
+      result = result.filter(item =>
+        item.articleName?.toLowerCase().includes(search) ||
+        item.sku?.toLowerCase().includes(search)
+      );
+    }
+
+    // Aplicar filtro predeterminado
+    if (this.activeFilter) {
+      switch (this.activeFilter) {
+        case 'low-stock':
+          result = result.filter(item => item.quantity > 0 && item.quantity <= 10);
+          break;
+        case 'high-price':
+          result = result.filter(item => (item.salePrice || 0) > 1000);
+          break;
+        case 'no-stock':
+          result = result.filter(item => item.quantity === 0);
+          break;
+        case 'available':
+          result = result.filter(item => item.quantity > 0);
+          break;
+      }
+    }
+
+    this.filteredData = result;
+    this.pageIndex = 0; // Reset a primera página
+    this.updatePagedData();
+  }
+
+  onSearchChanged(searchText: string) {
+    this.searchText = searchText;
+    this.applyFilters();
+  }
+
+  onFilterSelected(filterValue: string) {
+    this.activeFilter = filterValue;
+    this.applyFilters();
   }
 
   /** Actualiza los datos paginados según el índice y tamaño de página */
   updatePagedData() {
     const start = this.pageIndex * this.pageSize;
     const end = start + this.pageSize;
-    this.pagedData = this.data.slice(start, end);
+    this.pagedData = this.filteredData.slice(start, end);
   }
 
   /** Maneja el cambio de página/tamaño desde el paginador */
