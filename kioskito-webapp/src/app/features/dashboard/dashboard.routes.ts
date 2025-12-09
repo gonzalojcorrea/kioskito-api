@@ -31,6 +31,11 @@ export const DASHBOARD_ROUTES: Routes = [
         loadComponent: () =>
           import('../consignments/consignments-list-component').then(m => m.ConsignmentsListComponent)
       },
+      {
+        path: 'cierre-consignaciones',
+        loadChildren: () =>
+          import('../consignment-closure/consignment-closure.routes').then(m => m.CONSIGNMENT_CLOSURE_ROUTES)
+      },
       { path: '', pathMatch: 'full', redirectTo: 'home' } 
     ]
   }

@@ -1,0 +1,266 @@
+<div class="closure-form-container">
+  <!-- Loading Spinner -->
+  <div *ngIf="loading && !consignmentDetail" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando datos de la consignación...</p>
+  </div>
+
+  <!-- Form Content -->
+  <div *ngIf="consignmentDetail" class="form-content">
+    <!-- Header with Back Button -->
+    <div class="form-header">
+      <button mat-icon-button class="back-btn" (click)="goBack()" matTooltip="Volver">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-title">
+        <h1>
+          <mat-icon>receipt_long</mat-icon>
+          Cierre de Consignación
+        </h1>
+        <p class="header-subtitle">Actualice las cantidades vendidas y devueltas</p>
+      </div>
+    </div>
+
+    <form [formGroup]="form">
+      <!-- Customer Info Card -->
+      <mat-card class="info-card">
+        <mat-card-header class="card-header">
+          <mat-card-title>
+            <mat-icon>person</mat-icon>
+            Información del Cliente
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-content">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Cliente:</span>
+              <span class="info-value">{{ consignmentDetail.customerName }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email:</span>
+              <span class="info-value">{{ consignmentDetail.customerEmail }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fecha Inicio:</span>
+              <span class="info-value">{{ formatDate(consignmentDetail.startDate) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Total Inicial:</span>
+              <span class="info-value">{{ consignmentDetail.currentTotal | currency:'USD':'symbol':'1.2-2' }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Articles Table Card -->
+      <mat-card class="articles-card">
+        <mat-card-header class="card-header">
+          <mat-card-title>
+            <mat-icon>inventory_2</mat-icon>
+            Control de Artículos
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-content">
+          <div class="table-container">
+            <table mat-table [dataSource]="linesFormData" class="closure-table">
+              
+              <!-- SKU Column -->
+              <ng-container matColumnDef="sku">
+                <th mat-header-cell *matHeaderCellDef>SKU</th>
+                <td mat-cell *matCellDef="let line">
+                  <span class="sku-badge">{{ line.articleCode }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Article Column -->
+              <ng-container matColumnDef="article">
+                <th mat-header-cell *matHeaderCellDef>Artículo</th>
+                <td mat-cell *matCellDef="let line">
+                  <span class="article-name">{{ line.articleName }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Delivered Column -->
+              <ng-container matColumnDef="delivered">
+                <th mat-header-cell *matHeaderCellDef>Entregado</th>
+                <td mat-cell *matCellDef="let line" class="text-center">
+                  <span class="qty-badge">{{ line.deliveredQty }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Sold Column (Editable) -->
+              <ng-container matColumnDef="sold">
+                <th mat-header-cell *matHeaderCellDef class="editable-header">
+                  <mat-icon>edit</mat-icon>
+                  Vendido
+                </th>
+                <td mat-cell *matCellDef="let line; let i = index" class="editable-cell">
+                  <mat-form-field appearance="outline" class="input-field">
+                    <input 
+                      matInput 
+                      type="number" 
+                      min="0"
+                      [formControl]="getLineFormGroup(i).get('soldQtyInput')"
+                      [class.error-input]="line.hasError">
+                  </mat-form-field>
+                </td>
+              </ng-container>
+
+              <!-- Returned Column (Editable) -->
+              <ng-container matColumnDef="returned">
+                <th mat-header-cell *matHeaderCellDef class="editable-header">
+                  <mat-icon>edit</mat-icon>
+                  Devuelto
+                </th>
+                <td mat-cell *matCellDef="let line; let i = index" class="editable-cell">
+                  <mat-form-field appearance="outline" class="input-field">
+                    <input 
+                      matInput 
+                      type="number" 
+                      min="0"
+                      [formControl]="getLineFormGroup(i).get('returnedQtyInput')"
+                      [class.error-input]="line.hasError">
+                  </mat-form-field>
+                </td>
+              </ng-container>
+
+              <!-- Pending Column -->
+              <ng-container matColumnDef="pending">
+                <th mat-header-cell *matHeaderCellDef>Pendiente</th>
+                <td mat-cell *matCellDef="let line" class="text-center">
+                  <span 
+                    class="qty-badge"
+                    [class.pending-warning]="line.pendingQty > 0"
+                    [class.error-badge]="line.hasError">
+                    {{ line.pendingQty }}
+                  </span>
+                  <mat-icon 
+                    *ngIf="line.hasError" 
+                    class="error-icon"
+                    [matTooltip]="line.errorMessage">
+                    error
+                  </mat-icon>
+                </td>
+              </ng-container>
+
+              <!-- Unit Price Column -->
+              <ng-container matColumnDef="unitPrice">
+                <th mat-header-cell *matHeaderCellDef class="text-right">Precio Unit.</th>
+                <td mat-cell *matCellDef="let line" class="text-right">
+                  {{ line.unitPrice | currency:'USD':'symbol':'1.2-2' }}
+                </td>
+              </ng-container>
+
+              <!-- Subtotal Column -->
+              <ng-container matColumnDef="subtotal">
+                <th mat-header-cell *matHeaderCellDef class="text-right">Subtotal</th>
+                <td mat-cell *matCellDef="let line" class="text-right subtotal-cell">
+                  <strong>{{ line.subtotalSold | currency:'USD':'symbol':'1.2-2' }}</strong>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.error-row]="row.hasError"></tr>
+            </table>
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="hasErrors()" class="error-message">
+            <mat-icon>warning</mat-icon>
+            <span>Hay errores en las cantidades. Corrija los valores marcados en rojo.</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Summary Card -->
+      <mat-card class="summary-card">
+        <mat-card-header class="card-header">
+          <mat-card-title>
+            <mat-icon>summarize</mat-icon>
+            Resumen del Cierre
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-content">
+          <div class="summary-grid">
+            <div class="summary-item">
+              <mat-icon>shopping_cart</mat-icon>
+              <div class="summary-text">
+                <span class="summary-label">Total Vendidos</span>
+                <span class="summary-value">{{ getTotalSold() }}</span>
+              </div>
+            </div>
+            <div class="summary-item">
+              <mat-icon>keyboard_return</mat-icon>
+              <div class="summary-text">
+                <span class="summary-label">Total Devueltos</span>
+                <span class="summary-value">{{ getTotalReturned() }}</span>
+              </div>
+            </div>
+            <div class="summary-item">
+              <mat-icon>pending</mat-icon>
+              <div class="summary-text">
+                <span class="summary-label">Total Pendientes</span>
+                <span class="summary-value">{{ getTotalPending() }}</span>
+              </div>
+            </div>
+            <div class="summary-item highlight">
+              <mat-icon>attach_money</mat-icon>
+              <div class="summary-text">
+                <span class="summary-label">Monto Total a Cobrar</span>
+                <span class="summary-value">{{ getTotalAmount() | currency:'USD':'symbol':'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Options Card -->
+      <mat-card class="options-card">
+        <mat-card-content class="card-content">
+          <div class="options-section">
+            <mat-checkbox formControlName="createNewConsignmentForPending">
+              Crear nueva consignación con los artículos pendientes
+            </mat-checkbox>
+            <p class="checkbox-hint">
+              <mat-icon>info</mat-icon>
+              Si hay artículos pendientes, se creará automáticamente una nueva consignación con esos artículos
+            </p>
+          </div>
+
+          <mat-form-field appearance="outline" class="notes-field">
+            <mat-label>Notas del cierre (opcional)</mat-label>
+            <textarea 
+              matInput 
+              formControlName="notes" 
+              rows="3"
+              placeholder="Agregue comentarios o notas sobre este cierre..."></textarea>
+            <mat-icon matPrefix>note</mat-icon>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button 
+          mat-stroked-button 
+          type="button" 
+          class="btn-cancel"
+          (click)="cancel()"
+          [disabled]="loading">
+          <mat-icon>close</mat-icon>
+          Cancelar
+        </button>
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="button"
+          class="btn-submit"
+          (click)="confirmAndClose()"
+          [disabled]="hasErrors() || loading">
+          <mat-icon>check_circle</mat-icon>
+          {{ loading ? 'Procesando...' : 'Cerrar Consignación y Cobrar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

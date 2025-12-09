@@ -237,7 +237,8 @@ export class ShellComponent implements OnInit, OnDestroy {
     '/dashboard/articulos': 'Inventario',
     '/dashboard/clientes': 'Clientes',
     '/dashboard/usuarios': 'Usuarios',
-    '/dashboard/consignaciones': 'Consignaciones'
+    '/dashboard/consignaciones': 'Consignaciones',
+    '/dashboard/cierre-consignaciones': 'Cierre de Consignaciones'
   };
 
   constructor(

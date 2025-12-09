@@ -1,0 +1,116 @@
+<div class="customer-list-container">
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title">
+      <mat-icon>point_of_sale</mat-icon>
+      Cierre de Consignaciones
+    </h1>
+    <p class="page-subtitle">
+      Seleccione un cliente para procesar el cierre de sus consignaciones activas
+    </p>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando clientes...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && customers.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">inventory_2</mat-icon>
+    <h2>No hay consignaciones activas</h2>
+    <p>Actualmente no existen clientes con consignaciones pendientes de cierre</p>
+  </div>
+
+  <!-- Customer Cards -->
+  <div *ngIf="!loading && customers.length > 0" class="customers-grid">
+    <mat-card *ngFor="let customer of customers" class="customer-card">
+      <!-- Customer Header -->
+      <mat-card-header class="card-header">
+        <div class="customer-info">
+          <mat-icon class="customer-icon">person</mat-icon>
+          <div class="customer-details">
+            <h3 class="customer-name">{{ customer.customerName }}</h3>
+            <p class="customer-email">
+              <mat-icon>email</mat-icon> {{ customer.customerEmail }}
+            </p>
+            <p class="customer-phone" *ngIf="customer.customerPhone">
+              <mat-icon>phone</mat-icon> {{ customer.customerPhone }}
+            </p>
+          </div>
+        </div>
+        <div class="customer-badge">
+          <mat-icon [matBadge]="customer.activeConsignments.length" matBadgeColor="accent">
+            shopping_cart
+          </mat-icon>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content class="card-content">
+        <!-- Summary -->
+        <div class="summary-section">
+          <div class="summary-item">
+            <span class="summary-label">Total Consignaciones:</span>
+            <span class="summary-value">{{ customer.activeConsignments.length }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Total Artículos:</span>
+            <span class="summary-value">{{ getTotalItems(customer) }}</span>
+          </div>
+          <div class="summary-item highlight">
+            <span class="summary-label">Total Acumulado:</span>
+            <span class="summary-value">{{ getTotalConsignments(customer) | currency:'USD':'symbol':'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <!-- Expansion Panel for Consignments -->
+        <mat-accordion class="consignments-accordion">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon>list</mat-icon>
+                Ver Consignaciones Activas
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <!-- List of Consignments -->
+            <div class="consignment-list">
+              <div *ngFor="let consignment of customer.activeConsignments" class="consignment-item">
+                <div class="consignment-info">
+                  <div class="consignment-date">
+                    <mat-icon>calendar_today</mat-icon>
+                    <span>{{ formatDate(consignment.startDate) }}</span>
+                  </div>
+                  <div class="consignment-stats">
+                    <span class="stat-item">
+                      <mat-icon>inventory</mat-icon>
+                      {{ consignment.totalItems }} artículos
+                    </span>
+                    <span class="stat-item">
+                      <mat-icon>shopping_bag</mat-icon>
+                      {{ consignment.totalQuantityDelivered }} unidades
+                    </span>
+                    <span class="stat-item total">
+                      <mat-icon>attach_money</mat-icon>
+                      {{ consignment.total | currency:'USD':'symbol':'1.2-2' }}
+                    </span>
+                  </div>
+                </div>
+                <button 
+                  mat-raised-button 
+                  color="primary" 
+                  class="close-btn"
+                  (click)="openClosureForm(consignment.consignmentId)"
+                  matTooltip="Procesar cierre de consignación">
+                  <mat-icon>receipt_long</mat-icon>
+                  Cerrar Consignación
+                </button>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
