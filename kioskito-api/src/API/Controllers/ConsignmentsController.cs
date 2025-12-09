@@ -1,10 +1,13 @@
 using Application.Common.Models;
+using Application.Features.Consignments.Commands.CloseConsignment;
 using Application.Features.Consignments.Commands.CreateConsignment;
 using Application.Features.Consignments.Commands.DeleteConsignment;
 using Application.Features.Consignments.Commands.UpdateConsignment;
 using Application.Features.Consignments.Common;
 using Application.Features.Consignments.Queries.GetAllConsignments;
 using Application.Features.Consignments.Queries.GetConsignmentById;
+using Application.Features.Consignments.Queries.GetConsignmentClosureDetail;
+using Application.Features.Consignments.Queries.GetCustomersWithActiveConsignments;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +45,23 @@ public class ConsignmentsController : ControllerBase
     }
 
     /// <summary>
+    /// Obtiene todos los clientes que tienen consignaciones activas.
+    /// </summary>
+    /// <returns>Listado de clientes con sus consignaciones activas.</returns>
+    [HttpGet("closure/customers")]
+    [SwaggerOperation(
+        Summary = "Listar clientes con consignaciones activas",
+        Description = "Obtiene todos los clientes que tienen al menos una consignación en estado OPEN, útil para el proceso de cierre."
+    )]
+    [SwaggerResponse(200, "Listado de clientes con consignaciones activas", typeof(List<CustomerWithActiveConsignmentsResponse>))]
+    [SwaggerResponse(500, "Error interno", typeof(ErrorResponse))]
+    public async Task<ActionResult<List<CustomerWithActiveConsignmentsResponse>>> GetCustomersWithActiveConsignments()
+    {
+        var customers = await _mediator.Send(new GetCustomersWithActiveConsignmentsQuery());
+        return Ok(customers);
+    }
+
+    /// <summary>
     /// Obtiene el detalle completo de una consignación por su ID.
     /// </summary>
     /// <param name="id">Identificador de la consignación.</param>
@@ -58,6 +78,26 @@ public class ConsignmentsController : ControllerBase
     {
         var consignment = await _mediator.Send(new GetConsignmentByIdQuery(id));
         return Ok(consignment);
+    }
+
+    /// <summary>
+    /// Obtiene el detalle de cierre de una consignación específica.
+    /// </summary>
+    /// <param name="id">Identificador de la consignación.</param>
+    /// <returns>Detalle completo para el proceso de cierre con información de ventas y pendientes.</returns>
+    [HttpGet("{id:guid}/closure")]
+    [SwaggerOperation(
+        Summary = "Obtener detalle de cierre de consignación",
+        Description = "Recupera toda la información necesaria para realizar el cierre de una consignación: artículos entregados, vendidos, devueltos y pendientes."
+    )]
+    [SwaggerResponse(200, "Detalle de cierre de la consignación", typeof(ConsignmentClosureDetailResponse))]
+    [SwaggerResponse(400, "La consignación no está en estado OPEN", typeof(ErrorResponse))]
+    [SwaggerResponse(404, "Consignación no encontrada", typeof(ErrorResponse))]
+    [SwaggerResponse(500, "Error interno", typeof(ErrorResponse))]
+    public async Task<ActionResult<ConsignmentClosureDetailResponse>> GetConsignmentClosureDetail(Guid id)
+    {
+        var detail = await _mediator.Send(new GetConsignmentClosureDetailQuery(id));
+        return Ok(detail);
     }
 
     /// <summary>
@@ -78,6 +118,27 @@ public class ConsignmentsController : ControllerBase
     {
         var consignmentId = await _mediator.Send(command);
         return Ok(consignmentId);
+    }
+
+    /// <summary>
+    /// Cierra una consignación, registra las ventas y procesa artículos no vendidos.
+    /// </summary>
+    /// <param name="command">Datos del cierre: cantidades vendidas, devueltas y opciones de procesamiento.</param>
+    /// <returns>Resultado del cierre con IDs de orden de venta y nueva consignación si aplica.</returns>
+    [HttpPost("closure")]
+    [SwaggerOperation(
+        Summary = "Cerrar consignación",
+        Description = "Procesa el cierre de una consignación: actualiza cantidades vendidas/devueltas, crea orden de venta, " +
+                     "opcionalmente crea nueva consignación con pendientes o devuelve al inventario."
+    )]
+    [SwaggerResponse(200, "Consignación cerrada exitosamente", typeof(SuccessResponse<CloseConsignmentResponse>))]
+    [SwaggerResponse(400, "Error de validación o estado de consignación inválido", typeof(ErrorResponse))]
+    [SwaggerResponse(404, "Consignación o línea no encontrada", typeof(ErrorResponse))]
+    [SwaggerResponse(500, "Error interno", typeof(ErrorResponse))]
+    public async Task<ActionResult<CloseConsignmentResponse>> CloseConsignment([FromBody] CloseConsignmentCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     /// <summary>
